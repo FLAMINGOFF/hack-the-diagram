@@ -13,6 +13,7 @@ for (const r of runs) {
   const a = JSON.parse(readFileSync(r.jsonPath, 'utf8')).audits;
   const m = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift', 'speed-index'].map((k) => `${k.split('-').map((w) => w[0]).join('').toUpperCase()} ${a[k].displayValue}`);
   console.log(`${r.url}  ${m.join('  ')}`);
+  for (const it of a['layout-shifts']?.details?.items || []) console.log(`  layout shift ${it.score?.toFixed(3)}: ${it.node?.snippet ?? 'unknown element'}`);
 }
 
 mkdirSync('dist/badges', { recursive: true });
