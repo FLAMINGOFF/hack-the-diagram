@@ -14,6 +14,9 @@ export function Nav({ route }) {
             hack<b>/</b>the<b>/</b>diagram
           </span>
         </a>
+        <a href="#/start" className={`nav-start ${route === '/start' ? 'active' : ''}`}>
+          {tr({ en: 'Start here', zh: '新手指引' })}
+        </a>
         <TopicMenu route={route} />
         <div className="nav-tools">
           <div className="lang-toggle" role="group" aria-label="Language">

@@ -1,5 +1,6 @@
 import { useLang } from './i18n.jsx';
 import { useState } from 'react';
+import { getFlag, setFlag } from './progress.js';
 import { CATEGORIES, TOPICS } from './topics/registry.js';
 
 function HeroDiagram() {
@@ -72,8 +73,8 @@ export default function Home() {
               })}
             </p>
             <div className="hero-cta">
-              <a className="btn primary lg" href="#/xss">
-                {tr({ en: 'Start with XSS →', zh: '从 XSS 开始 →' })}
+              <a className="btn primary lg" href="#/start">
+                {tr({ en: 'New here? Start the guide →', zh: '新手？先看指引 →' })}
               </a>
               <a className="btn ghost lg" href="#/" onClick={(e) => { e.preventDefault(); document.getElementById('topics')?.scrollIntoView({ behavior: 'smooth' }); }}>
                 {tr({ en: 'Browse topics', zh: '浏览全部主题' })}
@@ -95,6 +96,7 @@ export default function Home() {
         </div>
       </section>
 
+      <WelcomeBanner />
       <TopicBrowser />
 
       <section className="container section">
@@ -199,5 +201,37 @@ function TopicBrowser() {
       })}
       {shown === 0 && <p className="muted">{tr({ en: 'No topics match.', zh: '没有匹配的主题。' })}</p>}
     </section>
+  );
+}
+
+function WelcomeBanner() {
+  const { tr } = useLang();
+  const [hidden, setHidden] = useState(() => getFlag('htd-welcome-dismissed'));
+  if (hidden) return null;
+  return (
+    <div className="container">
+      <div className="welcome" role="note">
+        <span aria-hidden="true">👋</span>
+        <p>
+          {tr({
+            en: 'First time here? The 10-minute beginner’s guide explains how the labs work and which topic to open first.',
+            zh: '第一次来？花 10 分钟看看新手指引，了解实验怎么用、先学哪个主题。',
+          })}
+        </p>
+        <a className="btn primary" href="#/start">
+          {tr({ en: 'Open the guide', zh: '打开指引' })}
+        </a>
+        <button
+          className="x"
+          aria-label={tr({ en: 'Dismiss', zh: '关闭' })}
+          onClick={() => {
+            setFlag('htd-welcome-dismissed');
+            setHidden(true);
+          }}
+        >
+          ✕
+        </button>
+      </div>
+    </div>
   );
 }

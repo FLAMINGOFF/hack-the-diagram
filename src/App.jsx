@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Footer, Nav } from './components/Layout.jsx';
 import GenericTopic from './components/GenericTopic.jsx';
 import Home from './Home.jsx';
+import Guide from './Guide.jsx';
 import Xss from './topics/Xss.jsx';
 import Sqli from './topics/Sqli.jsx';
 import Csrf from './topics/Csrf.jsx';
@@ -29,6 +30,7 @@ function useHashRoute() {
 
 function Page({ route }) {
   const id = route.replace(/^\//, '');
+  if (id === 'start') return <Guide />;
   const Custom = CUSTOM[id];
   if (Custom) return <Custom />;
   if (DEFS[id]) return <GenericTopic key={id} def={{ id, ...DEFS[id] }} />;

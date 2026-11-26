@@ -17,6 +17,8 @@
 | **Advanced** | Insecure deserialization · MCP server vulnerabilities · Web LLM attacks · GraphQL · SSTI · Web cache poisoning · Host header attacks · HTTP request smuggling · OAuth 2.0 · JWT · Prototype pollution |
 | **Foundations** | TLS 1.3 handshake |
 
+New visitors can start with the in-site **beginner’s guide** (`#/start`): how the labs work, six prerequisite ideas, a 5-stage learning path with progress ticks, and a glossary.
+
 Every topic has the same shape: **TL;DR → interactive lab → step-by-step sequence diagram → vulnerable vs fixed code → defences → interview questions**, in English and 中文.
 
 Highlights:

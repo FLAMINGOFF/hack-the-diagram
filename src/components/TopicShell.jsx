@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useLang } from '../i18n.jsx';
+import { markVisited } from '../progress.js';
 import { TOPICS, categoryById, topicById } from '../topics/registry.js';
 
 export function TopicShell({ id, tldr, children }) {
@@ -7,6 +9,7 @@ export function TopicShell({ id, tldr, children }) {
   const idx = TOPICS.findIndex((t) => t.id === id);
   const next = TOPICS[(idx + 1) % TOPICS.length];
   const cat = categoryById(topic.category);
+  useEffect(() => markVisited(id), [id]);
   return (
     <main className={`topic tone-${cat.tone}`}>
       <section className="topic-hero">
