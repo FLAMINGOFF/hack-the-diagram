@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Footer, Nav } from './components/Layout.jsx';
-import GenericTopic from './components/GenericTopic.jsx';
 import Home from './Home.jsx';
 import Guide from './Guide.jsx';
-import Xss from './topics/Xss.jsx';
-import Sqli from './topics/Sqli.jsx';
-import Csrf from './topics/Csrf.jsx';
-import Tls from './topics/Tls.jsx';
-import { SERVER } from './topics/content/server.js';
-import { CLIENT } from './topics/content/client.jsx';
-import { ADVANCED } from './topics/content/advanced.js';
+import { TOPICS } from './topics/registry.js';
 
-const CUSTOM = { xss: Xss, sqli: Sqli, csrf: Csrf, tls: Tls };
-const DEFS = { ...SERVER, ...CLIENT, ...ADVANCED };
+// Topic pages are split into their own chunks so the home page loads fast.
+const CUSTOM = {
+  xss: lazy(() => import('./topics/Xss.jsx')),
+  sqli: lazy(() => import('./topics/Sqli.jsx')),
+  csrf: lazy(() => import('./topics/Csrf.jsx')),
+  tls: lazy(() => import('./topics/Tls.jsx')),
+};
+const GenericPage = lazy(() => import('./topics/GenericPage.jsx'));
+const TOPIC_IDS = new Set(TOPICS.map((t) => t.id));
 
 function useHashRoute() {
   const read = () => window.location.hash.replace(/^#/, '') || '/';
@@ -33,7 +33,7 @@ function Page({ route }) {
   if (id === 'start') return <Guide />;
   const Custom = CUSTOM[id];
   if (Custom) return <Custom />;
-  if (DEFS[id]) return <GenericTopic key={id} def={{ id, ...DEFS[id] }} />;
+  if (TOPIC_IDS.has(id)) return <GenericPage id={id} />;
   return <Home />;
 }
 
@@ -47,7 +47,9 @@ export default function App() {
       </button>
       <Nav route={route} />
       <main id="main" tabIndex={-1}>
-        <Page route={route} />
+        <Suspense fallback={<div className="page-loading" aria-busy="true" />}>
+          <Page route={route} />
+        </Suspense>
       </main>
       <Footer />
     </>

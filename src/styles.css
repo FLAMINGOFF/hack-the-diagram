@@ -501,3 +501,4 @@ a.case-ref:hover { color: var(--text); }
 .skip-link { position: absolute; left: 12px; top: -48px; z-index: 100; padding: 8px 14px; border-radius: 8px; border: 0; background: var(--text); color: var(--bg); font: 600 0.9rem var(--font); cursor: pointer; }
 .skip-link:focus-visible { top: 12px; }
 main:focus { outline: none; }
+.page-loading { min-height: 100vh; }
