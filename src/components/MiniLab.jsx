@@ -63,7 +63,7 @@ export default function MiniLab({ lab }) {
       </div>
       <div className="panel">
         <div className="field-label">{tr({ en: 'Request', zh: '请求' })}</div>
-        <pre className="code small">{out.request}</pre>
+        <pre className="code small">{tr(out.request)}</pre>
         {out.log?.length > 0 && (
           <>
             <div className="field-label">{tr({ en: 'What the server does', zh: '服务器做了什么' })}</div>
