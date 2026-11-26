@@ -1,13 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLang } from '../i18n.jsx';
 import MiniLab from './MiniLab.jsx';
 import { Section } from './TopicShell.jsx';
 import { getSolved, markSolved } from '../progress.js';
-import { DEEP } from '../topics/deep/index.js';
+
+// The deep-dive data is large, so it is loaded on demand in its own chunk.
+let cache = null;
+export const loadDeep = () => (cache ??= import('../topics/deep/index.js').then((m) => m.DEEP));
 
 /** Variants, challenges and real-world cases for a topic (see src/topics/deep). */
 export default function DeepDive({ id }) {
-  const deep = DEEP[id];
+  const [all, setAll] = useState(null);
+  useEffect(() => {
+    let live = true;
+    loadDeep().then((d) => live && setAll(d));
+    return () => {
+      live = false;
+    };
+  }, []);
+  const deep = all?.[id];
   if (!deep) return null;
   return (
     <>

@@ -17,9 +17,15 @@
 | **Advanced** | Insecure deserialization · MCP server vulnerabilities · Web LLM attacks · GraphQL · SSTI · Web cache poisoning · Host header attacks · HTTP request smuggling · OAuth 2.0 · JWT · Prototype pollution |
 | **Foundations** | TLS 1.3 handshake |
 
-New visitors can start with the in-site **beginner’s guide** (`#/start`): how the labs work, six prerequisite ideas, a 5-stage learning path with progress ticks, and a glossary.
+New visitors can start with the in-site **beginner’s guide** (`#/start`): how the labs work, six prerequisite ideas, a 5-stage learning path with progress ticks and challenge counts, and a glossary.
 
-Every topic has the same shape: **TL;DR → interactive lab → step-by-step sequence diagram → vulnerable vs fixed code → defences → interview questions**, in English and 中文.
+Every topic has the same shape: **TL;DR → interactive lab → step-by-step sequence diagram → variants → challenges → real-world cases → vulnerable vs fixed code → defences → interview questions**, in English and 中文.
+
+Going deeper on every topic:
+
+- **Variants** (140 in total): each sub-type or technique (e.g. UNION / error / blind SQLi, CL.TE / TE.CL smuggling, alg:none / kid / algorithm confusion for JWT) has its own tab and lab with a defence toggle.
+- **Challenges** (88 levels): no presets. Write the payload yourself, ask for a hint (then the solution) if stuck, and the explanation unlocks when you pass. Progress is saved in your browser and shown on the learning path.
+- **Real-world cases** (55): short write-ups of well-known CVEs and incidents (Capital One SSRF, MOVEit, Heartbleed, Shellshock, ProxyLogon, Optus, …). Cases are included only where the facts are well documented.
 
 Highlights:
 
@@ -69,11 +75,15 @@ src/
     TopicShell.jsx         shared topic layout, defences, interview Q&A
     GenericTopic.jsx       page template for data-driven topics
     MiniLab.jsx            input → simulated server → verdict lab
+    DeepDive.jsx           variants, challenge cards, real-world cases (lazy-loaded)
   topics/
     registry.js            topic catalogue and categories
     Xss.jsx  Sqli.jsx  Csrf.jsx  Tls.jsx      hand-built labs
     content/
       server.js  client.jsx  advanced.js     data-driven topics
+    deep/
+      lib.js               helpers (inert HTML/JS execution checks, raw HTTP parser)
+      core1.js … adv4b.js  variants, challenges and cases per topic
 ```
 
 ## Adding a topic
@@ -81,6 +91,7 @@ src/
 1. Add an entry to `TOPICS` in `src/topics/registry.js`.
 2. Add a definition object to one of the files in `src/topics/content/` (`tldr`, `lab`, `actors`, `flow`, `code`, `defenses`, `qa`). A lab is just `fields`, `presets`, a `defense` toggle and a pure `run({ values, defended })` function.
 3. For a fully custom page, add a component and register it in `CUSTOM` in `src/App.jsx`.
+4. Optionally add `{ variants, challenges, cases }` for the topic id in `src/topics/deep/` and export it from `index.js`. A challenge is `fields`, a pure `run(values)`, a `check(values, output)` that decides if it passed, plus `hint`, `solution` and `explain`.
 
 ## License
 

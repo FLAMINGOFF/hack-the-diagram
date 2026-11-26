@@ -487,3 +487,8 @@ table.compare td { font-family: var(--font); }
 a.case-ref:hover { color: var(--text); }
 .case p { color: var(--muted); font-size: 0.92rem; margin: 0 0 8px; }
 .case .lesson { color: var(--text); margin: 0; }
+
+/* Challenge progress in the learning path */
+.challenge-bar span { background: var(--amber, #f5a524); }
+.stage-topic .ch-count { font-size: 0.72rem; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+.stage-topic .ch-count.all { background: var(--green); border-color: var(--green); color: var(--accent-ink); }

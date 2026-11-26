@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLang } from './i18n.jsx';
 import { categoryById, topicById } from './topics/registry.js';
-import { getVisited, resetVisited } from './progress.js';
+import { getSolved, getVisited, resetSolved, resetVisited } from './progress.js';
+import { loadDeep } from './components/DeepDive.jsx';
 
 const L = (en, zh) => ({ en, zh });
 
@@ -102,8 +103,9 @@ function Anatomy() {
     { n: '1', t: L('Lab', '实验'), b: L('Pick a payload chip or type your own. The right side shows the request, what the server did, the response, and a verdict.', '点一个 payload 预设，或者自己输入。右侧会显示请求、服务器做了什么、响应以及结论。') },
     { n: '2', t: L('Defence toggle', '防御开关'), b: L('Every lab has a switch between the vulnerable and the fixed version. Run the same payload twice and compare.', '每个实验都能在“有漏洞”和“已修复”之间切换。用同一个 payload 跑两次，对比结果。') },
     { n: '3', t: L('Trace diagram', '时序图'), b: L('Press ▶ Play or Next to walk through the attack. Click any arrow to jump to it. The box below explains each step.', '点 ▶ 播放或“下一步”逐步走完攻击，点击任意箭头可直接跳到那一步，下方的文字框会解释每一步。') },
-    { n: '4', t: L('Code + defences', '代码与防御'), b: L('A vulnerable snippet next to the fixed one, then the defences that actually work in production.', '有漏洞的代码和修复后的代码并排显示，随后是在生产环境中真正有效的防御。') },
-    { n: '5', t: L('Interview questions', '面试题'), b: L('Click a question to reveal the answer. Try answering out loud first.', '点击问题查看答案。建议先自己大声回答一遍。') },
+    { n: '4', t: L('Variants, challenges, real cases', '变体、关卡与真实案例'), b: L('Tabs for each sub-type with its own lab, then challenge levels with no presets: build the payload yourself, use a hint if stuck, and the explanation unlocks when you pass. Real incidents show why it matters.', '每种子类型一个标签页，各有自己的实验；之后是没有预设的关卡：自己构造 payload，卡住了可以看提示，通过后解锁讲解。真实事件告诉你它为什么重要。') },
+    { n: '5', t: L('Code + defences', '代码与防御'), b: L('A vulnerable snippet next to the fixed one, then the defences that actually work in production.', '有漏洞的代码和修复后的代码并排显示，随后是在生产环境中真正有效的防御。') },
+    { n: '6', t: L('Interview questions', '面试题'), b: L('Click a question to reveal the answer. Try answering out loud first.', '点击问题查看答案。建议先自己大声回答一遍。') },
   ];
   return (
     <div className="anatomy">
@@ -139,6 +141,18 @@ export default function Guide() {
   const total = PATH.reduce((n, s) => n + s.ids.length, 0);
   const done = PATH.reduce((n, s) => n + s.ids.filter((id) => visited.has(id)).length, 0);
   const next = PATH.flatMap((s) => s.ids).find((id) => !visited.has(id));
+  const [solved, setSolved] = useState(getSolved);
+  const [counts, setCounts] = useState(null);
+  useEffect(() => {
+    let live = true;
+    loadDeep().then((d) => live && setCounts(Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v.challenges?.length || 0]))));
+    return () => {
+      live = false;
+    };
+  }, []);
+  const solvedIn = (id) => [...solved].filter((k) => k.startsWith(`${id}:`)).length;
+  const chTotal = counts ? Object.values(counts).reduce((a, b) => a + b, 0) : 0;
+  const chDone = counts ? Object.keys(counts).reduce((n, id) => n + Math.min(solvedIn(id), counts[id]), 0) : 0;
 
   return (
     <main className="topic tone-green guide">
@@ -201,19 +215,31 @@ export default function Guide() {
             <span className="mono muted">
               {done} / {total} {tr(L('opened', '已打开'))}
             </span>
-            {done > 0 && (
+            {(done > 0 || chDone > 0) && (
               <button
                 className="btn ghost"
                 onClick={() => {
                   resetVisited();
+                  resetSolved();
                   setVisited(new Set());
+                  setSolved(new Set());
                 }}
               >
                 {tr(L('Reset', '重置'))}
               </button>
             )}
           </div>
-          <p className="tiny muted">{tr(L('Progress is saved only in this browser. A topic is ticked once you open it.', '进度只保存在当前浏览器中。打开过的主题会被打勾。'))}</p>
+          {counts && (
+            <div className="progress-row">
+              <div className="progress-bar challenge-bar" role="progressbar" aria-valuemin={0} aria-valuemax={chTotal} aria-valuenow={chDone}>
+                <span style={{ width: `${(chDone / chTotal) * 100}%` }} />
+              </div>
+              <span className="mono muted">
+                {chDone} / {chTotal} {tr(L('challenges solved', '关卡已通过'))}
+              </span>
+            </div>
+          )}
+          <p className="tiny muted">{tr(L('Progress is saved only in this browser. A topic is ticked once you open it; the number shows challenges solved in it.', '进度只保存在当前浏览器中。打开过的主题会被打勾；数字表示该主题已通过的关卡数。'))}</p>
           <div className="path">
             {PATH.map((stage, i) => (
               <div className="stage" key={i}>
@@ -236,6 +262,11 @@ export default function Guide() {
                         </span>
                         <span className={`badge tone-${c.tone}`}>{t.short}</span>
                         <span>{tr(t.title)}</span>
+                        {counts?.[id] > 0 && (
+                          <span className={`ch-count mono ${solvedIn(id) >= counts[id] ? 'all' : ''}`} title={tr(L('challenges solved', '已通过关卡'))}>
+                            {Math.min(solvedIn(id), counts[id])}/{counts[id]}
+                          </span>
+                        )}
                       </a>
                     );
                   })}
