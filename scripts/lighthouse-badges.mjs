@@ -8,6 +8,13 @@ if (!runs.length) throw new Error('No Lighthouse results found. Run `npx lhci au
 const CATS = { performance: 'performance', accessibility: 'accessibility', 'best-practices': 'best practices', seo: 'SEO' };
 const color = (s) => (s >= 90 ? 'brightgreen' : s >= 50 ? 'orange' : 'red');
 
+// Log the key metrics per page so a low score can be diagnosed from the CI log alone.
+for (const r of runs) {
+  const a = JSON.parse(readFileSync(r.jsonPath, 'utf8')).audits;
+  const m = ['first-contentful-paint', 'largest-contentful-paint', 'total-blocking-time', 'cumulative-layout-shift', 'speed-index'].map((k) => `${k.split('-').map((w) => w[0]).join('').toUpperCase()} ${a[k].displayValue}`);
+  console.log(`${r.url}  ${m.join('  ')}`);
+}
+
 mkdirSync('dist/badges', { recursive: true });
 for (const [key, label] of Object.entries(CATS)) {
   const score = Math.round(Math.min(...runs.map((r) => r.summary[key])) * 100);
