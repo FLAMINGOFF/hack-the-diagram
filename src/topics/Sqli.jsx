@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import { useLang } from '../i18n.jsx';
+import DeepDive from '../components/DeepDive.jsx';
 import SequenceDiagram from '../components/SequenceDiagram.jsx';
 import { StepControls, useStepper } from '../components/Stepper.jsx';
 import { Defenses, InterviewQs, Section, Seg, TopicShell } from '../components/TopicShell.jsx';
@@ -331,6 +332,8 @@ export default function Sqli() {
         <SequenceDiagram actors={ACTORS} messages={messages} step={stepper.step} onSelect={stepper.go} title={{ en: 'Login request sequence', zh: '登录请求时序图' }} />
         <StepControls stepper={stepper} messages={messages} />
       </Section>
+
+      <DeepDive id="sqli" />
 
       <Section kicker={{ en: 'Defend', zh: '防御' }} title={{ en: 'Defences that actually work', zh: '真正有效的防御' }}>
         <Defenses

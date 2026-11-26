@@ -1,4 +1,5 @@
 import { useLang } from '../i18n.jsx';
+import DeepDive from './DeepDive.jsx';
 import MiniLab from './MiniLab.jsx';
 import SequenceDiagram from './SequenceDiagram.jsx';
 import { StepControls, useStepper } from './Stepper.jsx';
@@ -22,6 +23,8 @@ export default function GenericTopic({ def }) {
         <SequenceDiagram actors={def.actors} messages={def.flow} step={stepper.step} onSelect={stepper.go} title={def.flowTitle} />
         <StepControls stepper={stepper} messages={def.flow} />
       </Section>
+
+      <DeepDive id={def.id} />
 
       {def.concepts && (
         <Section kicker={{ en: 'Variants', zh: '变体' }} title={def.conceptsTitle || { en: 'What to look for', zh: '需要关注的点' }}>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLang } from '../i18n.jsx';
+import DeepDive from '../components/DeepDive.jsx';
 import SequenceDiagram from '../components/SequenceDiagram.jsx';
 import { StepControls, useStepper } from '../components/Stepper.jsx';
 import { Defenses, InterviewQs, Section, Seg, TopicShell } from '../components/TopicShell.jsx';
@@ -235,6 +236,8 @@ export default function Tls() {
           </table>
         </div>
       </Section>
+
+      <DeepDive id="tls" />
 
       <Section kicker={{ en: 'Defend', zh: '防御' }} title={{ en: 'Getting TLS right', zh: '正确使用 TLS' }}>
         <Defenses

@@ -457,3 +457,33 @@ table.compare td { font-family: var(--font); }
 .welcome { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: color-mix(in srgb, var(--green) 12%, var(--surface)); border: 1px solid color-mix(in srgb, var(--green) 40%, transparent); border-radius: 12px; padding: 12px 16px; margin-bottom: 24px; }
 .welcome p { margin: 0; flex: 1; min-width: 200px; }
 .welcome .x { background: transparent; border: 0; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 4px 8px; }
+
+/* deep dive */
+.vtabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.vtabs button { border: 1px solid var(--border); background: var(--surface); color: var(--muted); font: 600 0.86rem var(--font); padding: 8px 14px; border-radius: 10px; cursor: pointer; }
+.vtabs button.on { color: var(--text); border-color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, var(--surface)); }
+.variant-summary { color: var(--muted); max-width: 80ch; }
+.takeaway { margin-top: 14px; padding: 10px 14px; border-left: 3px solid var(--tone); background: var(--surface); border-radius: 0 10px 10px 0; font-size: 0.93rem; }
+.challenges { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; margin-top: 12px; }
+.challenge { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); min-width: 0; }
+.challenge.done { border-color: color-mix(in srgb, var(--green) 55%, var(--border)); }
+.challenge-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.level { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tone); border: 1px solid color-mix(in srgb, var(--tone) 40%, transparent); padding: 2px 8px; border-radius: 6px; }
+.solved-badge { margin-left: auto; color: var(--green); font-weight: 700; font-size: 0.85rem; }
+.goal { margin: 10px 0 0; }
+.challenge .code { margin-top: 10px; }
+.challenge-out { margin-top: 12px; display: grid; gap: 8px; }
+.challenge-out .console { min-height: 0; }
+.unlock { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, var(--green) 10%, transparent); border: 1px solid color-mix(in srgb, var(--green) 45%, transparent); }
+.unlock-title { font-weight: 700; margin-bottom: 4px; }
+.unlock p { margin: 0 0 6px; }
+.unlock .tiny { word-break: break-all; }
+.hint code { background: var(--surface-2); padding: 2px 6px; border-radius: 6px; word-break: break-all; }
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 14px; }
+.case { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+.case-top { display: flex; justify-content: space-between; gap: 10px; font-size: 0.8rem; margin-bottom: 8px; flex-wrap: wrap; }
+.case-year { color: var(--tone); font-weight: 700; }
+.case-ref { color: var(--muted); text-decoration: none; }
+a.case-ref:hover { color: var(--text); }
+.case p { color: var(--muted); font-size: 0.92rem; margin: 0 0 8px; }
+.case .lesson { color: var(--text); margin: 0; }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLang } from '../i18n.jsx';
+import DeepDive from '../components/DeepDive.jsx';
 import SequenceDiagram from '../components/SequenceDiagram.jsx';
 import { StepControls, useStepper } from '../components/Stepper.jsx';
 import { Defenses, InterviewQs, Section, Seg, TopicShell } from '../components/TopicShell.jsx';
@@ -217,6 +218,8 @@ export default function Csrf() {
         <SequenceDiagram actors={ACTORS} messages={messages} step={stepper.step} onSelect={stepper.go} title={{ en: 'CSRF sequence', zh: 'CSRF 时序图' }} />
         <StepControls stepper={stepper} messages={messages} />
       </Section>
+
+      <DeepDive id="csrf" />
 
       <Section kicker={{ en: 'Defend', zh: '防御' }} title={{ en: 'Defences that actually work', zh: '真正有效的防御' }}>
         <Defenses

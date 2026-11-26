@@ -42,3 +42,31 @@ export function setFlag(key) {
     /* storage unavailable */
   }
 }
+
+const SOLVED = 'htd-solved';
+
+export function getSolved() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(SOLVED) || '[]'));
+  } catch {
+    return new Set();
+  }
+}
+
+export function markSolved(id) {
+  try {
+    const s = getSolved();
+    s.add(id);
+    localStorage.setItem(SOLVED, JSON.stringify([...s]));
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+export function resetSolved() {
+  try {
+    localStorage.removeItem(SOLVED);
+  } catch {
+    /* storage unavailable */
+  }
+}

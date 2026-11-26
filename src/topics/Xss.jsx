@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLang } from '../i18n.jsx';
+import DeepDive from '../components/DeepDive.jsx';
 import SequenceDiagram from '../components/SequenceDiagram.jsx';
 import { StepControls, useStepper } from '../components/Stepper.jsx';
 import { Defenses, InterviewQs, Section, Seg, TopicShell } from '../components/TopicShell.jsx';
@@ -302,20 +303,7 @@ export default function Xss() {
         <StepControls stepper={stepper} messages={messages} />
       </Section>
 
-      <Section kicker={{ en: 'Types', zh: '类型' }} title={{ en: 'Three flavours of XSS', zh: 'XSS 的三种类型' }}>
-        <div className="grid3">
-          {[
-            { t: { en: 'Stored', zh: '存储型' }, b: { en: 'Payload is saved on the server (comments, profiles) and served to every visitor. The lab above.', zh: 'payload 存在服务器上（评论、个人资料），发给每个访问者。就是上面的实验。' } },
-            { t: { en: 'Reflected', zh: '反射型' }, b: { en: 'Payload travels in the request, e.g. ?q=<script>, and is echoed back in the response. Needs the victim to click a crafted link.', zh: 'payload 在请求里，比如 ?q=<script>，被响应原样回显。需要受害者点击构造好的链接。' } },
-            { t: { en: 'DOM-based', zh: 'DOM 型' }, b: { en: 'Never touches the server: client-side JS reads location.hash or similar and writes it with innerHTML or eval.', zh: '完全不经过服务器：前端 JS 读取 location.hash 等数据，再用 innerHTML 或 eval 写入。' } },
-          ].map((x, i) => (
-            <div className="mini" key={i}>
-              <h3>{tr(x.t)}</h3>
-              <p>{tr(x.b)}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
+      <DeepDive id="xss" />
 
       <Section kicker={{ en: 'Defend', zh: '防御' }} title={{ en: 'Defences that actually work', zh: '真正有效的防御' }}>
         <Defenses
