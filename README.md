@@ -12,6 +12,24 @@
 
 ![Landing page](docs/home.png)
 
+## Demo
+
+**XSS:** post a payload to a sandboxed forum, watch it steal the cookie and deface the page, then switch on output encoding and see it turn into plain text.
+
+![XSS demo](docs/demo-xss.gif)
+
+**SQL injection:** type `admin'--` and the query shows which characters stayed data and which became SQL code, against a real SQLite database in the browser.
+
+![SQL injection demo](docs/demo-sqli.gif)
+
+**Challenges:** no presets. Get past the blocklist yourself and the explanation unlocks.
+
+![Challenge demo](docs/demo-challenge.gif)
+
+**TLS 1.3:** step through the handshake under an active man-in-the-middle and see where the forged certificate is caught.
+
+![TLS demo](docs/demo-tls.gif)
+
 ## Topics
 
 32 topics, organised like the [PortSwigger Web Security Academy](https://portswigger.net/web-security/all-topics) topic map (used only as a checklist; all explanations, diagrams and labs here are original).
@@ -41,10 +59,6 @@ Highlights:
 - **Clickjacking**: an opacity slider reveals the invisible frame under the decoy button.
 - **Request smuggling**: paste a raw request and see exactly where front end and back end disagree.
 - **SSRF, JWT, SSTI, NoSQLi, prototype pollution, …**: each lab simulates the vulnerable server and the fixed one with a single toggle.
-
-| XSS | SQL injection |
-| --- | --- |
-| ![XSS lab](docs/xss.png) | ![SQL injection lab](docs/sqli.png) |
 
 ## Safety
 
