@@ -11,7 +11,7 @@ export function TopicShell({ id, tldr, children }) {
   const cat = categoryById(topic.category);
   useEffect(() => markVisited(id), [id]);
   return (
-    <main className={`topic tone-${cat.tone}`}>
+    <div className={`topic tone-${cat.tone}`}>
       <section className="topic-hero">
         <div className="container">
           <a href="#/" className="back">
@@ -35,7 +35,7 @@ export function TopicShell({ id, tldr, children }) {
           </b>
         </a>
       </div>
-    </main>
+    </div>
   );
 }
 

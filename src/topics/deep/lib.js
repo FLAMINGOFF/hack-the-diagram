@@ -29,7 +29,6 @@ export function htmlExec(html) {
 export function jsExec(code) {
   let ok = true;
   try {
-    // eslint-disable-next-line no-new-func
     new Function(code); // compile only, never called
   } catch {
     ok = false;

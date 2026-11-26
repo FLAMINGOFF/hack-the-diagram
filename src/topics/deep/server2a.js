@@ -154,24 +154,14 @@ function sh(cmdline, fs = {}) {
   const dns = [];
   const subst = (s) => s.replace(/\$\(([^)]*)\)|`([^`]*)`/g, (_, a, b) => run1((a ?? b).trim()).out.trim());
   function run1(c) {
-    const words = subst(c).trim().split(/\s+/);
-    const [cmd, ...args] = words;
-    const redir = args.indexOf('>') >= 0 ? args.indexOf('>') : -1;
-    let target = null;
-    let a = args;
-    if (redir >= 0) {
-      target = args[redir + 1];
-      a = args.slice(0, redir);
-    } else {
-      const m = /^(.*?)>(\S+)$/.exec(words.slice(1).join(' '));
-      if (m) {
-        target = m[2];
-        a = m[1].trim() ? m[1].trim().split(/\s+/) : [];
-      }
-    }
+    // Split off a "> file" redirect wherever it appears, with or without spaces.
+    const line = subst(c).trim();
+    const m = /^(.*?)\s*>\s*(\S+)\s*$/.exec(line);
+    const target = m ? m[2] : null;
+    const [cmd, ...a] = (m ? m[1] : line).split(/\s+/);
     let out = '';
     let code = 0;
-    switch ((cmd || '').replace(/>.*$/, '')) {
+    switch (cmd || '') {
       case '':
         break;
       case 'whoami':

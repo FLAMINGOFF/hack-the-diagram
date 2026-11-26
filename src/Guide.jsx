@@ -155,7 +155,7 @@ export default function Guide() {
   const chDone = counts ? Object.keys(counts).reduce((n, id) => n + Math.min(solvedIn(id), counts[id]), 0) : 0;
 
   return (
-    <main className="topic tone-green guide">
+    <div className="topic tone-green guide">
       <section className="topic-hero">
         <div className="container">
           <a href="#/" className="back">
@@ -209,7 +209,7 @@ export default function Guide() {
           <div className="kicker">{tr(L('Step 3', '第 3 步'))}</div>
           <h2>{tr(L('Suggested learning path', '推荐学习路线'))}</h2>
           <div className="progress-row">
-            <div className="progress-bar" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
+            <div className="progress-bar" role="progressbar" aria-label={tr({ en: 'Topics explored', zh: '已探索的主题' })} aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
               <span style={{ width: `${(done / total) * 100}%` }} />
             </div>
             <span className="mono muted">
@@ -231,7 +231,7 @@ export default function Guide() {
           </div>
           {counts && (
             <div className="progress-row">
-              <div className="progress-bar challenge-bar" role="progressbar" aria-valuemin={0} aria-valuemax={chTotal} aria-valuenow={chDone}>
+              <div className="progress-bar challenge-bar" role="progressbar" aria-label={tr({ en: 'Challenges solved', zh: '已通过的挑战' })} aria-valuemin={0} aria-valuemax={chTotal} aria-valuenow={chDone}>
                 <span style={{ width: `${(chDone / chTotal) * 100}%` }} />
               </div>
               <span className="mono muted">
@@ -312,6 +312,6 @@ export default function Guide() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

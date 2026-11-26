@@ -381,7 +381,7 @@ function whereFilter(cat) {
   const js = `this.category == '${cat}' && this.released == 1`;
   // Evaluate the three shapes learners use, without eval.
   const tautology = /'\s*\|\|\s*'1'\s*==\s*'1$/.test(cat) || /'\s*\|\|\s*1\s*\|\|\s*'$/.test(cat) || /'\s*\|\|\s*true\s*\|\|\s*'$/.test(cat);
-  const nul = /'\s*%00$|\u0000/.test(cat);
+  const nul = /'\s*%00$/.test(cat) || cat.includes('\0');
   const base = cat.split("'")[0];
   if (cat.includes("'") && !tautology && !nul) return { js, err: true };
   const rows = PRODUCTS.filter((p) => (tautology ? true : p.category === base && (nul || p.released === 1)));

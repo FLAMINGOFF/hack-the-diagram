@@ -41,8 +41,14 @@ export default function App() {
   const route = useHashRoute();
   return (
     <>
+      {/* Hash routing owns the URL fragment, so the skip link moves focus instead of linking to #main. */}
+      <button className="skip-link" onClick={() => document.getElementById('main')?.focus()}>
+        Skip to content
+      </button>
       <Nav route={route} />
-      <Page route={route} />
+      <main id="main" tabIndex={-1}>
+        <Page route={route} />
+      </main>
       <Footer />
     </>
   );

@@ -14,16 +14,16 @@ export function Nav({ route }) {
             hack<b>/</b>the<b>/</b>diagram
           </span>
         </a>
-        <a href="#/start" className={`nav-start ${route === '/start' ? 'active' : ''}`}>
+        <a href="#/start" className={`nav-start ${route === '/start' ? 'active' : ''}`} aria-current={route === '/start' ? 'page' : undefined}>
           {tr({ en: 'Start here', zh: '新手指引' })}
         </a>
         <TopicMenu route={route} />
         <div className="nav-tools">
           <div className="lang-toggle" role="group" aria-label="Language">
-            <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>
+            <button className={lang === 'en' ? 'on' : ''} aria-pressed={lang === 'en'} onClick={() => setLang('en')}>
               EN
             </button>
-            <button className={lang === 'zh' ? 'on' : ''} onClick={() => setLang('zh')}>
+            <button className={lang === 'zh' ? 'on' : ''} aria-pressed={lang === 'zh'} onClick={() => setLang('zh')}>
               中文
             </button>
           </div>

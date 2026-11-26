@@ -1,4 +1,4 @@
-import { L, htmlExec, parseReq, verdict } from './lib.js';
+import { L, parseReq, verdict } from './lib.js';
 
 const neutral = (en, zh) => ({ verdict: 'neutral', message: L(en, zh) });
 const SITE = 'shop.example';

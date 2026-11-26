@@ -56,7 +56,7 @@ function HeroDiagram() {
 export default function Home() {
   const { tr } = useLang();
   return (
-    <main>
+    <div>
       <section className="hero">
         <div className="container hero-grid">
           <div>
@@ -137,7 +137,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 
@@ -152,7 +152,7 @@ function TopicBrowser() {
   const match = (t) =>
     !query || [t.short, t.title.en, t.title.zh, t.tag, t.blurb.en, t.blurb.zh].some((x) => x.toLowerCase().includes(query));
   const cats = CATEGORIES.filter((c) => cat === 'all' || c.id === cat);
-  let shown = 0;
+  const shown = TOPICS.filter((t) => cats.some((c) => c.id === t.category) && match(t)).length;
   return (
     <section className="container section" id="topics">
       <div className="kicker">{tr({ en: 'Labs', zh: '实验' })}</div>
@@ -172,7 +172,6 @@ function TopicBrowser() {
       </div>
       {cats.map((c) => {
         const list = TOPICS.filter((t) => t.category === c.id && match(t));
-        shown += list.length;
         if (!list.length) return null;
         return (
           <div key={c.id} className={`cat-group tone-${c.tone}`}>

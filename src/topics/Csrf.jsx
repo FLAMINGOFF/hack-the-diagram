@@ -103,7 +103,7 @@ export default function Csrf() {
       },
       { from: 'bank', to: 'br', ...final },
     ];
-  }, [samesite, token, method, outcome, m, tr]);
+  }, [samesite, token, outcome, m, tr]);
 
   const stepper = useStepper(messages.length, 2000);
   const { restart } = stepper;

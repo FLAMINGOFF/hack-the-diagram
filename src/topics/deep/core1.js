@@ -1,4 +1,4 @@
-import { L, decodeOnce, escHtml, htmlExec, jsExec, verdict } from './lib.js';
+import { L, escHtml, htmlExec, jsExec, verdict } from './lib.js';
 
 /* =============================================================== SQLi */
 const ADMIN_PW = 'k7x2q9';
