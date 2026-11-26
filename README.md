@@ -6,16 +6,27 @@
 
 ![Landing page](docs/home.png)
 
-## Labs
+## Topics
 
-| Topic | What you can do | OWASP (2021) |
-| --- | --- | --- |
-| **Cross-Site Scripting** | Post payloads to a vulnerable forum rendered in a sandboxed iframe. An "attacker console" shows what your code achieved (cookie reads, exfiltration, defacement). Switch between *vulnerable*, *output encoding* and *strict CSP*. | A03 Injection |
-| **SQL Injection** | Attack a login form backed by a **real SQLite engine** (sql.js / WebAssembly). Every character of your input is coloured by whether the database parses it as data or as code. Compare string concatenation with parameterised queries; try `UNION` dumps and `DROP TABLE`. | A03 Injection |
-| **CSRF** | Toggle `SameSite` (None / Lax / Strict), anti-CSRF tokens and the attack technique (auto-submit form, `<img>`, link). Replay the attack and see which defence stops it and at which step. | A01 Broken Access Control |
-| **TLS 1.3 handshake** | Step through the handshake while an eavesdropper panel shows what is visible on the wire (hint: SNI). Switch on an active man-in-the-middle and watch certificate validation abort the connection. | A02 Cryptographic Failures |
+32 topics, organised like the [PortSwigger Web Security Academy](https://portswigger.net/web-security/all-topics) topic map (used only as a checklist; all explanations, diagrams and labs here are original).
 
-Every lab follows the same shape: **Attack → Trace (step-by-step sequence diagram) → Defend**, and ends with interview-style questions.
+| Category | Topics |
+| --- | --- |
+| **Server-side** | SQL injection · Authentication · Path traversal · OS command injection · Business logic · Information disclosure · Access control / IDOR · File upload · Race conditions · SSRF · XXE · NoSQL injection · API testing / mass assignment · Web cache deception |
+| **Client-side** | XSS · CSRF · CORS · Clickjacking · DOM-based · WebSocket hijacking |
+| **Advanced** | Insecure deserialization · MCP server vulnerabilities · Web LLM attacks · GraphQL · SSTI · Web cache poisoning · Host header attacks · HTTP request smuggling · OAuth 2.0 · JWT · Prototype pollution |
+| **Foundations** | TLS 1.3 handshake |
+
+Every topic has the same shape: **TL;DR → interactive lab → step-by-step sequence diagram → vulnerable vs fixed code → defences → interview questions**, in English and 中文.
+
+Highlights:
+
+- **XSS**: payloads run in a real sandboxed iframe; an attacker console shows cookie reads and exfiltration.
+- **SQL injection**: a real SQLite engine (sql.js); every input character is coloured as data or code.
+- **CSRF / TLS**: configurable simulators (SameSite, tokens; passive eavesdropper vs active MITM).
+- **Clickjacking**: an opacity slider reveals the invisible frame under the decoy button.
+- **Request smuggling**: paste a raw request and see exactly where front end and back end disagree.
+- **SSRF, JWT, SSTI, NoSQLi, prototype pollution, …**: each lab simulates the vulnerable server and the fixed one with a single toggle.
 
 | XSS | SQL injection |
 | --- | --- |
@@ -54,18 +65,20 @@ src/
     SequenceDiagram.jsx    reusable animated SVG sequence diagram
     Stepper.jsx            play / step controls + narration
     TopicShell.jsx         shared topic layout, defences, interview Q&A
+    GenericTopic.jsx       page template for data-driven topics
+    MiniLab.jsx            input → simulated server → verdict lab
   topics/
-    registry.js            topic metadata
-    Xss.jsx  Sqli.jsx  Csrf.jsx  Tls.jsx
+    registry.js            topic catalogue and categories
+    Xss.jsx  Sqli.jsx  Csrf.jsx  Tls.jsx      hand-built labs
+    content/
+      server.js  client.jsx  advanced.js     data-driven topics
 ```
 
 ## Adding a topic
 
-1. Add metadata to `src/topics/registry.js`.
-2. Create `src/topics/YourTopic.jsx` using `TopicShell`, `SequenceDiagram` and `useStepper`.
-3. Register the route in `src/App.jsx`.
-
-Ideas for next labs: SSRF, JWT pitfalls (`alg: none`, key confusion), OAuth 2.0 authorization code + PKCE, clickjacking, CORS misconfiguration.
+1. Add an entry to `TOPICS` in `src/topics/registry.js`.
+2. Add a definition object to one of the files in `src/topics/content/` (`tldr`, `lab`, `actors`, `flow`, `code`, `defenses`, `qa`). A lab is just `fields`, `presets`, a `defense` toggle and a pure `run({ values, defended })` function.
+3. For a fully custom page, add a component and register it in `CUSTOM` in `src/App.jsx`.
 
 ## License
 

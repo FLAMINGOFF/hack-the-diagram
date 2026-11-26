@@ -1,5 +1,5 @@
 import { useLang } from '../i18n.jsx';
-import { TOPICS } from '../topics/registry.js';
+import { CATEGORIES, TOPICS } from '../topics/registry.js';
 
 export function Nav({ route }) {
   const { lang, setLang, tr } = useLang();
@@ -14,13 +14,7 @@ export function Nav({ route }) {
             hack<b>/</b>the<b>/</b>diagram
           </span>
         </a>
-        <nav className="nav-links" aria-label={tr({ en: 'Topics', zh: '主题' })}>
-          {TOPICS.map((t) => (
-            <a key={t.id} href={`#/${t.id}`} className={route === `/${t.id}` ? 'active' : ''}>
-              {t.short}
-            </a>
-          ))}
-        </nav>
+        <TopicMenu route={route} />
         <div className="nav-tools">
           <div className="lang-toggle" role="group" aria-label="Language">
             <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>
@@ -65,5 +59,28 @@ export function Footer() {
         </p>
       </div>
     </footer>
+  );
+}
+
+function TopicMenu({ route }) {
+  const { tr } = useLang();
+  return (
+    <details className="topic-menu" key={route}>
+      <summary>
+        {tr({ en: 'Topics', zh: '主题' })} <span aria-hidden="true">▾</span>
+      </summary>
+      <div className="topic-menu-panel">
+        {CATEGORIES.map((c) => (
+          <div key={c.id} className={`tone-${c.tone}`}>
+            <div className="topic-menu-cat">{tr(c.title)}</div>
+            {TOPICS.filter((t) => t.category === c.id).map((t) => (
+              <a key={t.id} href={`#/${t.id}`} className={route === `/${t.id}` ? 'active' : ''}>
+                {tr(t.title)}
+              </a>
+            ))}
+          </div>
+        ))}
+      </div>
+    </details>
   );
 }

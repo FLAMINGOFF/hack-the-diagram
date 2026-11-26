@@ -1,21 +1,23 @@
 import { useLang } from '../i18n.jsx';
-import { TOPICS, topicById } from '../topics/registry.js';
+import { TOPICS, categoryById, topicById } from '../topics/registry.js';
 
 export function TopicShell({ id, tldr, children }) {
   const { tr } = useLang();
   const topic = topicById(id);
   const idx = TOPICS.findIndex((t) => t.id === id);
   const next = TOPICS[(idx + 1) % TOPICS.length];
+  const cat = categoryById(topic.category);
   return (
-    <main className={`topic tone-${topic.tone}`}>
+    <main className={`topic tone-${cat.tone}`}>
       <section className="topic-hero">
         <div className="container">
           <a href="#/" className="back">
             ← {tr({ en: 'All topics', zh: '全部主题' })}
           </a>
           <div className="eyebrow">
-            <span className={`badge tone-${topic.tone}`}>{topic.short}</span>
-            <span className="muted mono">{topic.owasp}</span>
+            <span className={`badge tone-${cat.tone}`}>{topic.short}</span>
+            <span className="muted">{tr(cat.title)}</span>
+            <span className="muted mono">{topic.tag}</span>
           </div>
           <h1>{tr(topic.title)}</h1>
           <p className="lede">{tr(tldr)}</p>

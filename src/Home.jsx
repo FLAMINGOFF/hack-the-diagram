@@ -1,5 +1,6 @@
 import { useLang } from './i18n.jsx';
-import { TOPICS } from './topics/registry.js';
+import { useState } from 'react';
+import { CATEGORIES, TOPICS } from './topics/registry.js';
 
 function HeroDiagram() {
   const { tr } = useLang();
@@ -74,13 +75,13 @@ export default function Home() {
               <a className="btn primary lg" href="#/xss">
                 {tr({ en: 'Start with XSS →', zh: '从 XSS 开始 →' })}
               </a>
-              <a className="btn ghost lg" href="#topics">
+              <a className="btn ghost lg" href="#/" onClick={(e) => { e.preventDefault(); document.getElementById('topics')?.scrollIntoView({ behavior: 'smooth' }); }}>
                 {tr({ en: 'Browse topics', zh: '浏览全部主题' })}
               </a>
             </div>
             <ul className="hero-facts">
               <li>
-                <b>4</b> {tr({ en: 'labs', zh: '个实验' })}
+                <b>{TOPICS.length}</b> {tr({ en: 'topics', zh: '个主题' })}
               </li>
               <li>
                 <b>0</b> {tr({ en: 'servers, all in-browser', zh: '个服务器，全部在浏览器里跑' })}
@@ -94,26 +95,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container section" id="topics">
-        <div className="kicker">{tr({ en: 'Labs', zh: '实验' })}</div>
-        <h2>{tr({ en: 'Pick a vulnerability', zh: '选一个漏洞' })}</h2>
-        <div className="cards">
-          {TOPICS.map((t) => (
-            <a key={t.id} className={`card tone-${t.tone}`} href={`#/${t.id}`}>
-              <div className="card-top">
-                <span className={`badge tone-${t.tone}`}>{t.short}</span>
-                <span className="card-kind">{tr(t.kind)}</span>
-              </div>
-              <h3>{tr(t.title)}</h3>
-              <p>{tr(t.blurb)}</p>
-              <div className="card-foot">
-                <span className="mono muted">{t.owasp}</span>
-                <span className="go">{tr({ en: 'Open lab →', zh: '打开实验 →' })}</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
+      <TopicBrowser />
 
       <section className="container section">
         <div className="kicker">{tr({ en: 'How every lab works', zh: '每个实验的结构' })}</div>
@@ -154,5 +136,68 @@ export default function Home() {
         </div>
       </section>
     </main>
+  );
+}
+
+const kindLabel = (t) =>
+  t.kind === 'lab' ? { en: 'Interactive lab', zh: '交互实验' } : t.kind === 'steps' ? { en: 'Step-through', zh: '逐步演示' } : t.kind;
+
+function TopicBrowser() {
+  const { tr } = useLang();
+  const [cat, setCat] = useState('all');
+  const [q, setQ] = useState('');
+  const query = q.trim().toLowerCase();
+  const match = (t) =>
+    !query || [t.short, t.title.en, t.title.zh, t.tag, t.blurb.en, t.blurb.zh].some((x) => x.toLowerCase().includes(query));
+  const cats = CATEGORIES.filter((c) => cat === 'all' || c.id === cat);
+  let shown = 0;
+  return (
+    <section className="container section" id="topics">
+      <div className="kicker">{tr({ en: 'Labs', zh: '实验' })}</div>
+      <h2>{tr({ en: 'Pick a vulnerability', zh: '选一个漏洞' })}</h2>
+      <div className="browser-tools">
+        <div className="chips">
+          <button className={`chip ${cat === 'all' ? 'on' : ''}`} onClick={() => setCat('all')}>
+            {tr({ en: 'All', zh: '全部' })} · {TOPICS.length}
+          </button>
+          {CATEGORIES.map((c) => (
+            <button key={c.id} className={`chip tone-${c.tone} ${cat === c.id ? 'on' : ''}`} onClick={() => setCat(c.id)}>
+              {tr(c.title)} · {TOPICS.filter((t) => t.category === c.id).length}
+            </button>
+          ))}
+        </div>
+        <input className="input search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tr({ en: 'Search topics… (e.g. jwt, 注入)', zh: '搜索主题…（如 jwt、注入）' })} aria-label={tr({ en: 'Search topics', zh: '搜索主题' })} />
+      </div>
+      {cats.map((c) => {
+        const list = TOPICS.filter((t) => t.category === c.id && match(t));
+        shown += list.length;
+        if (!list.length) return null;
+        return (
+          <div key={c.id} className={`cat-group tone-${c.tone}`}>
+            <div className="cat-head">
+              <h3>{tr(c.title)}</h3>
+              <span className="muted">{tr(c.blurb)}</span>
+            </div>
+            <div className="cards">
+              {list.map((t) => (
+                <a key={t.id} className={`card tone-${c.tone}`} href={`#/${t.id}`}>
+                  <div className="card-top">
+                    <span className={`badge tone-${c.tone}`}>{t.short}</span>
+                    <span className="card-kind">{tr(kindLabel(t))}</span>
+                  </div>
+                  <h3>{tr(t.title)}</h3>
+                  <p>{tr(t.blurb)}</p>
+                  <div className="card-foot">
+                    <span className="mono muted">{t.tag}</span>
+                    <span className="go">{tr({ en: 'Open →', zh: '打开 →' })}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+      {shown === 0 && <p className="muted">{tr({ en: 'No topics match.', zh: '没有匹配的主题。' })}</p>}
+    </section>
   );
 }
