@@ -206,3 +206,60 @@ test('file upload: a polyglot gets past the signature check', async ({ page }) =
   await viz.getByRole('button', { name: 'Upload', exact: true }).click();
   await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
 });
+
+test('XXE: disallowing DOCTYPE leaves XInclude open', async ({ page }) => {
+  await page.goto('./#/xxe');
+  const viz = page.locator('.xxe-viz');
+  await viz.getByRole('button', { name: 'Send' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+  await viz.getByRole('radio', { name: 'DOCTYPE disallowed', exact: true }).click();
+  await viz.getByRole('button', { name: 'XInclude' }).click();
+  await viz.getByRole('button', { name: 'Send' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+});
+
+test('NoSQL: $ne logs in as admin until fields must be strings', async ({ page }) => {
+  await page.goto('./#/nosqli');
+  const viz = page.locator('.nosql-viz');
+  await viz.getByRole('button', { name: 'Log in' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('admin', { timeout: 8000 });
+  await viz.getByRole('radio', { name: 'Both fields must be strings' }).click();
+  await viz.getByRole('button', { name: 'Log in' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('mass assignment: isAdmin lands on the record', async ({ page }) => {
+  await page.goto('./#/api');
+  const viz = page.locator('.ma-viz');
+  await viz.getByRole('button', { name: 'Send PATCH' }).click();
+  await expect(viz.locator('.ma-field.priv')).toContainText('isAdmin', { timeout: 8000 });
+});
+
+test('business logic: a negative quantity fits the credit', async ({ page }) => {
+  await page.goto('./#/logic');
+  const viz = page.locator('.logic-viz');
+  await viz.getByRole('button', { name: 'Check out' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('$90.21', { timeout: 8000 });
+  await viz.getByText('Quantity must be 1 or more').click();
+  await viz.getByRole('button', { name: 'Check out' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('information disclosure: production settings leak nothing', async ({ page }) => {
+  await page.goto('./#/info-disclosure');
+  const viz = page.locator('.info-viz');
+  await viz.getByRole('radio', { name: 'Production settings' }).click();
+  await viz.getByRole('button', { name: 'Run recon' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('cache deception: the cache serves the victim page to the attacker', async ({ page }) => {
+  await page.goto('./#/cache-deception');
+  const viz = page.locator('.cd-viz');
+  for (let i = 0; i < 9; i++) {
+    const next = viz.getByRole('button', { name: /Next/ });
+    if (await next.isDisabled()) break;
+    await next.click();
+  }
+  await expect(viz.locator('.verdict.bad')).toBeVisible();
+});

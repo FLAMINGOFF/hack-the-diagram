@@ -733,3 +733,40 @@ main:focus { outline: none; }
 .up-steps li span { color: var(--muted); font-size: 0.8rem; word-break: break-all; }
 .up-steps li b { word-break: break-all; }
 @media (prefers-reduced-motion: reduce) { .sh-part, .auth-row, .up-steps li { animation: none; } }
+/* batch 2 visuals */
+.xxe-body { white-space: pre-wrap; word-break: break-all; }
+.nosql-input { width: 100%; resize: vertical; font-size: 0.82rem; }
+.nosql-err { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: var(--code-bg); }
+.nosql-viz td small, .nosql-viz td { word-break: break-all; }
+.nosql-viz td small { display: block; font-size: 0.72rem; }
+.nosql-hit { background: color-mix(in srgb, var(--red) 12%, transparent); }
+.nosql-miss td { color: var(--muted); }
+.ma-go { margin-top: 10px; }
+.ma-record { display: grid; gap: 4px; font: 0.84rem var(--mono); }
+.ma-field { display: flex; gap: 10px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); animation: pop-in 0.25s ease-out; }
+.ma-key { min-width: 76px; font-weight: 700; }
+.ma-val { word-break: break-all; }
+.ma-field.changed { border-color: var(--blue); }
+.ma-field.priv { border-color: var(--red); background: color-mix(in srgb, var(--red) 12%, var(--surface)); }
+.ma-field.priv .ma-val { color: var(--red); font-weight: 700; }
+.ma-field.dropped { border-color: var(--green); }
+.logic-receipt { font: 0.86rem var(--mono); display: grid; gap: 2px; }
+.logic-row { display: flex; justify-content: space-between; gap: 10px; padding: 5px 8px; border-radius: 6px; animation: pop-in 0.25s ease-out; }
+.logic-row.neg span:last-child { color: var(--red); font-weight: 700; }
+.logic-row.total { border-top: 2px solid var(--border); margin-top: 4px; font-weight: 700; animation: none; }
+.logic-meter { position: relative; height: 10px; border-radius: 5px; background: var(--surface-2); border: 1px solid var(--border); margin-top: 8px; overflow: hidden; }
+.logic-meter span { position: absolute; inset: 0 auto 0 0; background: var(--c-normal); transition: width 0.35s; }
+.logic-meter span.fits { background: var(--red); }
+.logic-meter i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--text); }
+.logic-credit { text-align: center; font-size: 0.72rem; color: var(--muted); }
+.info-loot { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 0.88rem; }
+.info-loot li { animation: pop-in 0.3s ease-out; }
+.info-probes { display: grid; gap: 8px; }
+.info-probe { border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+.info-probe .code { margin: 6px 0 0; white-space: pre-wrap; word-break: break-all; }
+.info-probe.leak { border-left-color: var(--red); }
+.info-probe.clean { border-left-color: var(--green); }
+.info-req { font: 600 0.82rem var(--mono); }
+.cd-viz .chips { margin-bottom: 12px; }
+@media (prefers-reduced-motion: reduce) { .ma-field, .logic-row, .info-loot li { animation: none; } }
+.code, .console { font-variant-ligatures: none; }
