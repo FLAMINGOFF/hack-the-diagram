@@ -263,3 +263,48 @@ test('cache deception: the cache serves the victim page to the attacker', async 
   }
   await expect(viz.locator('.verdict.bad')).toBeVisible();
 });
+
+test('DOM XSS: innerHTML runs the image handler, textContent does not', async ({ page }) => {
+  await page.goto('./#/dom');
+  const viz = page.locator('.dom-viz');
+  await viz.getByRole('button', { name: 'Open the link' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('onerror', { timeout: 8000 });
+  await viz.getByRole('radio', { name: 'el.textContent = q' }).click();
+  await viz.getByRole('button', { name: 'Open the link' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('WebSocket hijacking: an Origin check refuses the handshake', async ({ page }) => {
+  await page.goto('./#/websockets');
+  const viz = page.locator('.ws-viz');
+  await viz.getByRole('button', { name: 'Alice visits evil.example' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+  await viz.getByText('Server checks the Origin header').click();
+  await viz.getByRole('button', { name: 'Alice visits evil.example' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('deserialization: __destruct deletes the file', async ({ page }) => {
+  await page.goto('./#/deserialization');
+  const viz = page.locator('.ds-viz');
+  await viz.getByRole('button', { name: 'Send cookie' }).click();
+  await expect(viz.locator('.console')).toContainText('__destruct', { timeout: 8000 });
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+});
+
+test('SSTI: the decision tree tells Twig from Jinja2', async ({ page }) => {
+  await page.goto('./#/ssti');
+  const viz = page.locator('.ssti-viz');
+  await viz.getByRole('button', { name: 'Twig (PHP)' }).click();
+  await viz.getByRole('button', { name: 'Fingerprint' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('Twig', { timeout: 8000 });
+});
+
+test('GraphQL: suggestions leak the hidden field', async ({ page }) => {
+  await page.goto('./#/graphql');
+  const viz = page.locator('.gql-viz');
+  await viz.getByText('Introspection off').click();
+  await viz.getByRole('button', { name: 'Send query' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+  await expect(viz.locator('.gql-field.leak')).toContainText('password');
+});

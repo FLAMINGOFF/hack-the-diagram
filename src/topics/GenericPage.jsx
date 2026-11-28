@@ -9,6 +9,31 @@ const L = (en, zh) => ({ en, zh });
 
 // Hand-built interactive visuals for some topics, each in its own chunk.
 const VISUALS = {
+  dom: {
+    title: L('From the URL to the sink', '从 URL 到汇点'),
+    intro: L('DOM XSS happens entirely in the browser. Follow a value from the address bar into the page, and see which sinks turn it into running code.', 'DOM XSS 完全发生在浏览器里。跟着一个值从地址栏走进页面，看哪些汇点会把它变成可执行的代码。'),
+    Component: lazy(() => import('../visuals/DomFlow.jsx')),
+  },
+  websockets: {
+    title: L('A socket opened from someone else’s page', '从别人的页面打开的连接'),
+    intro: L('Alice is logged in to a chat site and visits a page the attacker controls. Watch the handshake and the frames, then switch on each defence.', 'Alice 已登录某个聊天网站，然后访问了攻击者控制的页面。观察握手和数据帧，然后逐一打开各项防御。'),
+    Component: lazy(() => import('../visuals/WsFrames.jsx')),
+  },
+  deserialization: {
+    title: L('The cookie chooses the object', '由 Cookie 决定创建什么对象'),
+    intro: L('The session cookie is a serialized PHP object. Change a field, or swap in a different class, and follow what the server does with it.', '会话 Cookie 是一个序列化的 PHP 对象。改一个字段，或者换成另一个类，看服务器会怎么处理。'),
+    Component: lazy(() => import('../visuals/DeserialChain.jsx')),
+  },
+  ssti: {
+    title: L('Fingerprint the template engine', '识别模板引擎'),
+    intro: L('Each engine evaluates a different syntax, and some evaluate the same probe differently. Choose what the server runs, then let the decision tree work it out from the responses alone.', '每种引擎认的语法不同，有些对同一个探测的计算结果也不同。选好服务器用的引擎，然后让决策树仅凭响应把它推断出来。'),
+    Component: lazy(() => import('../visuals/SstiTree.jsx')),
+  },
+  graphql: {
+    title: L('What one endpoint gives away', '一个端点能泄露多少'),
+    intro: L('GraphQL describes itself and runs many operations per request. See what an attacker learns from introspection and error messages, and how aliases slip past a per-request rate limit.', 'GraphQL 会描述自己，并且一个请求能执行多个操作。看攻击者能从内省和错误信息中了解到什么，以及别名如何绕过按请求计数的限速。'),
+    Component: lazy(() => import('../visuals/GraphqlLab.jsx')),
+  },
   xxe: {
     title: L('Watch the parser fetch it', '看解析器替你去取'),
     intro: L('An XML parser that honours DOCTYPEs will read files and make requests on your behalf. Step through what it does with each payload, then change how the parser is configured.', '支持 DOCTYPE 的 XML 解析器会替你读取文件、发出请求。逐步查看它如何处理每种载荷，再修改解析器的配置。'),

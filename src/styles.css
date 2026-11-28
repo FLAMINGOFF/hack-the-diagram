@@ -770,3 +770,54 @@ main:focus { outline: none; }
 .cd-viz .chips { margin-bottom: 12px; }
 @media (prefers-reduced-motion: reduce) { .ma-field, .logic-row, .info-loot li { animation: none; } }
 .code, .console { font-variant-ligatures: none; }
+/* batch 3 visuals */
+.dom-go { margin-top: 12px; }
+.dom-stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: st; }
+.dom-stage { display: grid; gap: 3px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); border-left: 4px solid var(--border); background: var(--surface-2); transition: border-color 0.3s; }
+.dom-stage code { font: 0.8rem var(--mono); word-break: break-all; color: var(--muted); }
+.dom-stage.on { border-left-color: var(--blue); }
+.dom-stage.on code { color: var(--text); }
+.dom-stage.bad { border-left-color: var(--red); background: color-mix(in srgb, var(--red) 10%, var(--surface)); }
+.dom-title { font: 700 0.68rem var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.dom-note { font-size: 0.8rem; color: var(--amber); }
+.dom-alert { margin: 10px auto 0; max-width: 280px; display: grid; gap: 4px; padding: 12px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); font-size: 0.86rem; animation: pop-in 0.3s ease-out; }
+.dom-alert em { font-size: 0.75rem; color: var(--muted); }
+.ws-hs { white-space: pre-wrap; }
+.ws-status { font: 700 0.84rem var(--mono); margin: 6px 0; }
+.ws-frames { display: grid; gap: 4px; margin-top: 6px; }
+.ws-frame { display: flex; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.8rem; animation: pop-in 0.25s ease-out; }
+.ws-frame code { font: 0.78rem var(--mono); word-break: break-all; }
+.ws-dir { font: 700 0.8rem var(--mono); color: var(--blue); white-space: nowrap; }
+.ws-frame.down { background: color-mix(in srgb, var(--red) 8%, transparent); }
+.ws-frame.exfil { border-color: var(--red); }
+.ws-frame.exfil .ws-dir { color: var(--red); }
+.ds-cookie { white-space: pre-wrap; word-break: break-all; }
+.bad-border { box-shadow: inset 3px 0 0 var(--red); }
+.ssti-viz .race-controls { align-items: flex-start; }
+.ssti-scroll { overflow-x: auto; }
+.ssti-svg { width: 100%; min-width: 560px; max-width: 720px; margin: 0 auto; height: auto; display: block; }
+.ssti-viz .race-controls .field-label { margin-top: 0; }
+.ssti-edge line { stroke: var(--border); stroke-width: 2; transition: stroke 0.3s; }
+.ssti-edge text { font: 11px var(--mono); fill: var(--muted); }
+.ssti-edge.on line { stroke: var(--red); stroke-width: 3; }
+.ssti-edge.on text { fill: var(--red); font-weight: 700; }
+.ssti-node rect { fill: var(--surface-2); stroke: var(--border); stroke-width: 1.5; transition: stroke 0.3s, fill 0.3s; }
+.ssti-node text { font: 12px var(--mono); fill: var(--text); }
+.ssti-node.leaf text { font-family: var(--font); font-weight: 700; }
+.ssti-node.on rect { stroke: var(--blue); stroke-width: 2.5; }
+.ssti-node.final rect { stroke: var(--red); fill: color-mix(in srgb, var(--red) 14%, var(--surface)); }
+.ssti-log { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 4px; font-size: 0.82rem; }
+.ssti-log code { font: 0.8rem var(--mono); word-break: break-all; }
+.gql-schema { margin-top: 6px; display: grid; gap: 6px; font: 0.8rem var(--mono); }
+.gql-type { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); }
+.gql-field { padding-left: 14px; color: var(--muted); }
+.gql-field.known { color: var(--text); }
+.gql-field.leak { color: var(--red); font-weight: 700; }
+.gql-step { margin-bottom: 10px; animation: pop-in 0.3s ease-out; }
+.gql-step .code { white-space: pre-wrap; word-break: break-all; margin: 0; }
+.gql-res { font: 600 0.8rem var(--mono); margin-top: 4px; word-break: break-all; }
+.gql-grid { display: grid; grid-template-columns: repeat(20, 1fr); gap: 3px; margin: 8px 0; }
+.gql-grid span { aspect-ratio: 1; border-radius: 2px; background: var(--surface-2); border: 1px solid var(--border); }
+.gql-grid span.miss { background: var(--c-normal); border-color: var(--c-normal); }
+.gql-grid span.hit { background: var(--red); border-color: var(--red); transform: scale(1.4); }
+@media (prefers-reduced-motion: reduce) { .dom-alert, .ws-frame, .gql-step { animation: none; } }
