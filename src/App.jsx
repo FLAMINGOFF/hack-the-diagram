@@ -3,6 +3,7 @@ import { Footer, Nav } from './components/Layout.jsx';
 import Home from './Home.jsx';
 import Guide from './Guide.jsx';
 import { TOPICS } from './topics/registry.js';
+import { initAnalytics, trackPage } from './analytics.js';
 
 // Topic pages are split into their own chunks so the home page loads fast.
 const CUSTOM = {
@@ -41,6 +42,12 @@ function Page({ route }) {
 
 export default function App() {
   const route = useHashRoute();
+  useEffect(initAnalytics, []);
+  useEffect(() => {
+    // wait a tick so the page has set its document.title
+    const t = setTimeout(() => trackPage(route), 300);
+    return () => clearTimeout(t);
+  }, [route]);
   return (
     <>
       {/* Hash routing owns the URL fragment, so the skip link moves focus instead of linking to #main. */}

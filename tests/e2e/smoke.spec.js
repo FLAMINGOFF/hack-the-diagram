@@ -98,3 +98,46 @@ test('every topic has a share page with its own title', async ({ request }) => {
   expect(html).toContain('<meta property="og:title" content="JWT Attacks · Hack the Diagram">');
   expect(html).toContain('#/jwt');
 });
+
+test('theme toggle switches and is remembered after reload', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('./');
+  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.getByRole('button', { name: 'Switch to light mode' })).toBeVisible();
+});
+
+test('phone menu fits on one row and holds the main links', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('./#/xss');
+  expect(await page.locator('.nav').evaluate((e) => e.offsetHeight)).toBeLessThan(64);
+  await page.locator('.topic-menu summary').click();
+  await page.locator('.menu-quick').getByRole('link', { name: 'Cheat sheet' }).click();
+  await expect(page.locator('h1')).toHaveText('Cheat sheet');
+});
+
+test('CORS gate: a prefix check leaks to a look-alike domain', async ({ page }) => {
+  await page.goto('./#/cors');
+  const viz = page.locator('.cors-viz');
+  await viz.getByRole('radio', { name: 'Prefix check' }).click();
+  await viz.getByRole('button', { name: 'bank.example.evil.example' }).click();
+  await viz.getByRole('button', { name: 'Run the script' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+});
+
+test('OAuth flow: exact redirect_uri matching blocks the stolen code', async ({ page }) => {
+  await page.goto('./#/oauth');
+  const viz = page.locator('.oauth-viz');
+  await viz.getByText('Exact redirect_uri match').click();
+  for (let i = 0; i < 3; i++) await viz.getByRole('button', { name: /Next/ }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible();
+});
+
+test('clickjacking layers: the click lands on the framed bank page', async ({ page }) => {
+  await page.goto('./#/clickjacking');
+  const viz = page.locator('.cj3-viz');
+  await viz.getByRole('button', { name: 'Play the click' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 6000 });
+});

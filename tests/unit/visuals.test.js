@@ -75,3 +75,42 @@ describe('request smuggling', () => {
     expect(sm.run(sm.build('normal'), 'CL', 'TE', false).poisoned).toBe(false);
   });
 });
+
+import * as cors from '../../src/visuals/cors.js';
+import * as oauth from '../../src/visuals/oauth.js';
+
+describe('CORS gate', () => {
+  const stolen = (config, origin) => cors.run(config, origin).stolen;
+  it('follows the browser rules for credentialed requests', () => {
+    expect(cors.browserCheck('https://a.example', { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true' }).ok).toBe(false);
+    expect(cors.browserCheck('https://a.example', { 'Access-Control-Allow-Origin': 'https://a.example' }).ok).toBe(false);
+    expect(cors.browserCheck('https://a.example', {}).ok).toBe(false);
+  });
+  it('each broken policy leaks to the origin that abuses it, and the exact allowlist to none', () => {
+    expect(stolen('reflect', 'https://evil.example')).toBe(true);
+    expect(stolen('prefix', 'https://bank.example.evil.example')).toBe(true);
+    expect(stolen('prefix', 'https://evil.example')).toBe(false);
+    expect(stolen('null', 'null')).toBe(true);
+    for (const o of cors.ORIGINS) expect(stolen('wildcard', o.value) || stolen('exact', o.value)).toBe(false);
+    expect(cors.run('exact', 'https://bank.example').legit).toBe(true);
+  });
+});
+
+describe('OAuth flow', () => {
+  const out = (attack, d) => oauth.flow(attack, { exact: false, state: false, pkce: false, ...d }).outcome;
+  it('only exact redirect_uri matching stops code theft via redirect_uri', () => {
+    expect(out('redirect', {})).toBe('pwned');
+    expect(out('redirect', { state: true, pkce: true })).toBe('pwned');
+    expect(out('redirect', { exact: true })).toBe('blocked');
+  });
+  it('state or PKCE stops login CSRF; redirect matching does not', () => {
+    expect(out('csrf', {})).toBe('pwned');
+    expect(out('csrf', { exact: true })).toBe('pwned');
+    expect(out('csrf', { state: true })).toBe('blocked');
+    expect(out('csrf', { pkce: true })).toBe('blocked');
+  });
+  it('every message names known actors', () => {
+    const ids = new Set(oauth.ACTORS.map((a) => a.id));
+    for (const a of Object.keys(oauth.ATTACKS)) for (const m of oauth.flow(a, { exact: false, state: false, pkce: false }).messages) expect(ids.has(m.from) && ids.has(m.to)).toBe(true);
+  });
+});

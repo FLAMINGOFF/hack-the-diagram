@@ -60,6 +60,9 @@ Highlights:
 - **Request smuggling**: step through the bytes and see exactly where the front end and back end disagree, and how the leftover bytes poison the next user's request.
 - **SSRF**: an animated network map shows the server carrying your URL past the firewall, with four defences and the bypass that beats each one.
 - **JWT**: edit a real token, signed with HMAC-SHA256 in your browser, and watch a naive and a hardened server verify it step by step (alg: none, weak secrets, kid traversal).
+- **CORS**: pick a server policy and an origin, and watch whether the browser hands the bank's data to the attacker's script.
+- **OAuth**: the authorization code flow is redrawn live as you switch attacks (stolen code, login CSRF) and defences (exact redirect_uri, state, PKCE).
+- **Clickjacking**: pull the decoy page and the invisible frame apart in 3D to see which layer receives the click.
 - **Cheat sheet**: every topic on one printable page: how to spot it, what to try, how to fix it.
 - **SSRF, JWT, SSTI, NoSQLi, prototype pollution, …**: each lab simulates the vulnerable server and the fixed one with a single toggle.
 
@@ -74,6 +77,8 @@ For learning only. Only test systems you own or are authorised to test.
 - [Vite](https://vite.dev/) + React 19, no UI framework, hand-written SVG sequence diagrams
 - [sql.js](https://github.com/sql-js/sql.js) (SQLite compiled to WebAssembly) for the SQL injection lab
 - Bilingual UI (EN / 中文) with a tiny context-based i18n helper
+- Light/dark theme that follows the system and remembers a manual choice
+- Optional, cookie-free page counts with GoatCounter (off until a site code is set in `src/analytics.js`)
 - Hash routing, so it works on GitHub Pages without server config. Because link previews ignore the part after #, the build also writes a small page per topic at `/t/<id>/` with its own title and description, which forwards to the real page
 - Deployed by GitHub Actions from `main`, only after every check below passes
 
@@ -84,7 +89,7 @@ Every push and pull request runs the [CI workflow](.github/workflows/ci.yml). Th
 | Check | What it covers |
 | --- | --- |
 | **ESLint** | JS/JSX, React hooks rules and `jsx-a11y` accessibility rules |
-| **Unit tests** (Vitest, 570) | Every lab preset in both vulnerable and fixed mode, every challenge (the starting input must fail, the published solution must pass), every EN/中文 string pair, the shared helpers (inert HTML/JS checks, raw HTTP parser, local progress), and the visuals' logic (URL normalisation, a published HMAC-SHA256 test vector, smuggling byte offsets) |
+| **Unit tests** (Vitest, 575) | Every lab preset in both vulnerable and fixed mode, every challenge (the starting input must fail, the published solution must pass), every EN/中文 string pair, the shared helpers (inert HTML/JS checks, raw HTTP parser, local progress), and the visuals' logic (URL normalisation, a published HMAC-SHA256 test vector, smuggling byte offsets) |
 | **Browser tests** (Playwright) | All 32 topic pages render without errors or horizontal overflow, search, language switch, keyboard skip link, and solving a challenge updates the guide |
 | **Accessibility** (axe-core) | WCAG 2.1 A/AA scan of every page in light and dark mode |
 | **Lighthouse CI** | Performance, accessibility, best practices and SEO on the production build. The badges above show the lowest score from the latest run on `main` |
@@ -131,7 +136,7 @@ src/
       lib.js               helpers (inert HTML/JS execution checks, raw HTTP parser)
       core1.js … adv4b.js  variants, challenges and cases per topic
     cheatsheet.js          data for the one-page cheat sheet
-  visuals/                 hand-built interactive visuals (SSRF map, JWT inspector, smuggling stream)
+  visuals/                 hand-built interactive visuals (SSRF, JWT, smuggling, CORS, OAuth, clickjacking)
                            with their logic in plain .js files so it can be unit-tested
   Cheatsheet.jsx           printable cheat sheet page
 tests/

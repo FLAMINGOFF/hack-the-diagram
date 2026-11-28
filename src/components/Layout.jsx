@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { useLang } from '../i18n.jsx';
 import { CATEGORIES, TOPICS } from '../topics/registry.js';
+import { GOATCOUNTER_CODE } from '../analytics.js';
 
 export function Nav({ route }) {
   const { lang, setLang, tr } = useLang();
@@ -30,6 +32,7 @@ export function Nav({ route }) {
               中文
             </button>
           </div>
+          <ThemeToggle />
           <a className="gh" href="https://github.com/FLAMINGOFF/hack-the-diagram" target="_blank" rel="noreferrer" aria-label="GitHub repository">
             <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
               <path
@@ -63,6 +66,11 @@ export function Footer() {
           </a>{' '}
           · {tr({ en: 'For learning only. Only test systems you own or are authorised to test.', zh: '仅供学习。只测试你拥有或获得授权的系统。' })}
         </p>
+        {GOATCOUNTER_CODE && (
+          <p className="muted tiny">
+            {tr({ en: 'Anonymous page counts by GoatCounter. No cookies, no personal data.', zh: '使用 GoatCounter 匿名统计访问量，不用 Cookie，不收集个人信息。' })}
+          </p>
+        )}
       </div>
     </footer>
   );
@@ -73,9 +81,22 @@ function TopicMenu({ route }) {
   return (
     <details className="topic-menu" key={route}>
       <summary>
-        {tr({ en: 'Topics', zh: '主题' })} <span aria-hidden="true">▾</span>
+        <span className="menu-desk">
+          {tr({ en: 'Topics', zh: '主题' })} <span aria-hidden="true">▾</span>
+        </span>
+        <span className="menu-mob">
+          <span aria-hidden="true">☰</span> <span className="menu-word">{tr({ en: 'Menu', zh: '菜单' })}</span>
+        </span>
       </summary>
       <div className="topic-menu-panel">
+        <div className="menu-quick">
+          <a href="#/start" className={route === '/start' ? 'active' : ''}>
+            {tr({ en: 'Start here', zh: '新手指引' })}
+          </a>
+          <a href="#/cheatsheet" className={route === '/cheatsheet' ? 'active' : ''}>
+            {tr({ en: 'Cheat sheet', zh: '速查表' })}
+          </a>
+        </div>
         {CATEGORIES.map((c) => (
           <div key={c.id} className={`tone-${c.tone}`}>
             <div className="topic-menu-cat">{tr(c.title)}</div>
@@ -88,5 +109,42 @@ function TopicMenu({ route }) {
         ))}
       </div>
     </details>
+  );
+}
+
+const THEME_KEY = 'htd-theme';
+const systemDark = () => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+
+function savedTheme() {
+  try {
+    const t = localStorage.getItem(THEME_KEY);
+    if (t === 'light' || t === 'dark') return t;
+  } catch {
+    /* storage unavailable */
+  }
+  return null;
+}
+
+/** Light/dark switch. Starts from the system setting; a click is remembered. */
+function ThemeToggle() {
+  const { tr } = useLang();
+  const [theme, setTheme] = useState(() => savedTheme() ?? (systemDark() ? 'dark' : 'light'));
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+  const flip = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch {
+      /* storage unavailable */
+    }
+  };
+  const label = theme === 'dark' ? tr({ en: 'Switch to light mode', zh: '切换到浅色模式' }) : tr({ en: 'Switch to dark mode', zh: '切换到深色模式' });
+  return (
+    <button type="button" className="theme-toggle" onClick={flip} aria-label={label} title={label}>
+      <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
+    </button>
   );
 }
