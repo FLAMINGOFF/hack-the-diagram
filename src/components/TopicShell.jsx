@@ -1,7 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLang } from '../i18n.jsx';
 import { markVisited } from '../progress.js';
 import { TOPICS, categoryById, topicById } from '../topics/registry.js';
+
+const setDocTitle = (t) => {
+  document.title = t;
+};
 
 export function TopicShell({ id, tldr, children }) {
   const { tr } = useLang();
@@ -10,6 +14,10 @@ export function TopicShell({ id, tldr, children }) {
   const next = TOPICS[(idx + 1) % TOPICS.length];
   const cat = categoryById(topic.category);
   useEffect(() => markVisited(id), [id]);
+  useEffect(() => {
+    setDocTitle(`${tr(topic.title)} · Hack the Diagram`);
+    return () => setDocTitle('Hack the Diagram');
+  }, [topic, tr]);
   return (
     <div className={`topic tone-${cat.tone}`}>
       <section className="topic-hero">
@@ -24,6 +32,7 @@ export function TopicShell({ id, tldr, children }) {
           </div>
           <h1>{tr(topic.title)}</h1>
           <p className="lede">{tr(tldr)}</p>
+          <ShareLink id={id} />
         </div>
       </section>
       <div className="container topic-body">{children}</div>
@@ -91,5 +100,26 @@ export function Seg({ value, onChange, options, label }) {
         ))}
       </div>
     </div>
+  );
+}
+
+/** Copies a link that shows this topic's own title and description when shared. */
+function ShareLink({ id }) {
+  const { tr } = useLang();
+  const [copied, setCopied] = useState(false);
+  const url = new URL(`t/${id}/`, window.location.origin + import.meta.env.BASE_URL).href;
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt(tr({ en: 'Copy this link', zh: '复制这个链接' }), url);
+    }
+  };
+  return (
+    <button type="button" className="btn ghost share-btn" onClick={copy} aria-live="polite">
+      {copied ? `✓ ${tr({ en: 'Link copied', zh: '链接已复制' })}` : `🔗 ${tr({ en: 'Copy share link', zh: '复制分享链接' })}`}
+    </button>
   );
 }

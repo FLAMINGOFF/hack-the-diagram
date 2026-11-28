@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { TOPICS } from '../../src/topics/registry.js';
 
 // Automated WCAG 2.1 A/AA checks with axe-core, in both colour schemes.
-const PAGES = ['', '#/start', ...TOPICS.map((t) => `#/${t.id}`)];
+const PAGES = ['', '#/start', '#/cheatsheet', ...TOPICS.map((t) => `#/${t.id}`)];
 
 for (const scheme of ['light', 'dark']) {
   test.describe(scheme, () => {
@@ -12,7 +12,10 @@ for (const scheme of ['light', 'dark']) {
       test(`no axe violations: /${path || 'home'}`, async ({ page }) => {
         await page.goto(`./${path}`);
         await page.locator('h1').first().waitFor();
-        if (path.startsWith('#/') && path !== '#/start') await page.locator('.challenge').first().waitFor();
+        if (path.startsWith('#/') && !['#/start', '#/cheatsheet'].includes(path)) await page.locator('.challenge').first().waitFor();
+        // Let lazy visuals mount and entrance transitions finish before measuring contrast.
+        await page.waitForFunction(() => !document.querySelector('.viz-loading, .page-loading'));
+        await page.waitForTimeout(400);
         const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
         const summary = violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.length}× e.g. ${v.nodes[0].target.join(' ')}`);
         expect(summary).toEqual([]);

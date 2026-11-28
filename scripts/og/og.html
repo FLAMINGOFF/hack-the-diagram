@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: Inter; src: url('../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+  @font-face { font-family: Mono; src: url('../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; }
+  html, body { margin: 0; }
+  body { width: 1200px; height: 630px; background: radial-gradient(900px 500px at 85% 20%, #16234a 0%, #0a0e1a 60%); color: #e6ebff; font-family: Inter, sans-serif; position: relative; overflow: hidden; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px); background-size: 40px 40px; }
+  .left { position: absolute; left: 72px; top: 70px; width: 600px; }
+  .logo { font: 700 26px Mono, monospace; display: flex; align-items: center; gap: 14px; }
+  .logo b { color: #3ddc97; }
+  .dots i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; }
+  h1 { font-size: 74px; line-height: 1.02; margin: 54px 0 22px; letter-spacing: -0.03em; font-weight: 800; }
+  h1 em { font-style: normal; color: #ff5d6c; }
+  p { font-size: 26px; color: #a9b3d6; line-height: 1.4; margin: 0; }
+  .stats { position: absolute; left: 72px; bottom: 64px; display: flex; gap: 14px; font: 600 20px Mono, monospace; }
+  .stats span { padding: 9px 16px; border: 1px solid #2b3658; border-radius: 10px; background: #121829; }
+  .stats b { color: #3ddc97; }
+  svg { position: absolute; right: 40px; top: 120px; }
+  .node { font: 700 22px Inter; }
+  .sub { font: 500 15px Mono; fill: #94a0c2; }
+</style></head>
+<body>
+<div class="grid"></div>
+<div class="left">
+  <div class="logo"><span class="dots"><i style="background:#3ddc97"></i><i style="background:#5aa9ff"></i><i style="background:#ff5d6c"></i></span><span>hack<b>/</b>the<b>/</b>diagram</span></div>
+  <h1>Understand attacks by <em>breaking things</em>.</h1>
+  <p>Interactive diagrams and sandboxed labs for web security. English &amp; 中文.</p>
+</div>
+<svg width="470" height="380" viewBox="0 0 470 380">
+  <path d="M110 70 C 200 30, 280 30, 360 70" stroke="#5aa9ff" stroke-width="3" fill="none" stroke-dasharray="8 8"/>
+  <path d="M110 110 C 130 200, 180 260, 235 290" stroke="#ff5d6c" stroke-width="3" fill="none" stroke-dasharray="8 8"/>
+  <path d="M360 110 C 340 200, 290 260, 235 290" stroke="#ff5d6c" stroke-width="3" fill="none" stroke-dasharray="8 8" opacity=".55"/>
+  <circle cx="235" cy="42" r="8" fill="#3ddc97"/>
+  <circle cx="165" cy="232" r="8" fill="#ff5d6c"/>
+  <g><rect x="10" y="50" width="200" height="74" rx="14" fill="#121829" stroke="#3ddc97" stroke-width="2.5"/><text x="110" y="83" text-anchor="middle" class="node" fill="#e6ebff">Browser</text><text x="110" y="108" text-anchor="middle" class="sub">alice@uni</text></g>
+  <g><rect x="260" y="50" width="200" height="74" rx="14" fill="#121829" stroke="#5aa9ff" stroke-width="2.5"/><text x="360" y="83" text-anchor="middle" class="node" fill="#e6ebff">Server</text><text x="360" y="108" text-anchor="middle" class="sub">bank.example</text></g>
+  <g><rect x="135" y="270" width="200" height="74" rx="14" fill="#1a0f18" stroke="#ff5d6c" stroke-width="2.5"/><text x="235" y="303" text-anchor="middle" class="node" fill="#e6ebff">Attacker</text><text x="235" y="328" text-anchor="middle" class="sub">evil.example</text></g>
+</svg>
+<div class="stats"><span><b>32</b> topics</span><span><b>140</b> variants</span><span><b>88</b> challenges</span><span><b>55</b> real cases</span></div>
+</body></html>

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { useLang } from '../i18n.jsx';
 import DeepDive from './DeepDive.jsx';
 import MiniLab from './MiniLab.jsx';
@@ -6,12 +7,20 @@ import { StepControls, useStepper } from './Stepper.jsx';
 import { Defenses, InterviewQs, Section, TopicShell } from './TopicShell.jsx';
 
 /** Renders any topic described as data (see src/topics/content/*.js). */
-export default function GenericTopic({ def }) {
+export default function GenericTopic({ def, Visual }) {
   const { tr } = useLang();
   const stepper = useStepper(def.flow.length);
   const Custom = def.CustomLab;
   return (
     <TopicShell id={def.id} tldr={def.tldr}>
+      {Visual && (
+        <Section kicker={{ en: 'See it', zh: '看懂它' }} title={Visual.title}>
+          {Visual.intro && <p className="muted viz-intro">{tr(Visual.intro)}</p>}
+          <Suspense fallback={<div className="viz-loading" />}>
+            <Visual.Component />
+          </Suspense>
+        </Section>
+      )}
       {(def.lab || Custom) && (
         <Section kicker={{ en: 'Lab', zh: '实验' }} title={def.labTitle || { en: 'Try it', zh: '动手试试' }}>
           {def.labIntro && <p className="muted">{tr(def.labIntro)}</p>}

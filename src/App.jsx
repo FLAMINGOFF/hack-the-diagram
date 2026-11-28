@@ -12,6 +12,7 @@ const CUSTOM = {
   tls: lazy(() => import('./topics/Tls.jsx')),
 };
 const GenericPage = lazy(() => import('./topics/GenericPage.jsx'));
+const Cheatsheet = lazy(() => import('./Cheatsheet.jsx'));
 const TOPIC_IDS = new Set(TOPICS.map((t) => t.id));
 
 function useHashRoute() {
@@ -31,6 +32,7 @@ function useHashRoute() {
 function Page({ route }) {
   const id = route.replace(/^\//, '');
   if (id === 'start') return <Guide />;
+  if (id === 'cheatsheet') return <Cheatsheet />;
   const Custom = CUSTOM[id];
   if (Custom) return <Custom />;
   if (TOPIC_IDS.has(id)) return <GenericPage id={id} />;

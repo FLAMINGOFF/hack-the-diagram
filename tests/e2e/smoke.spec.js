@@ -55,3 +55,46 @@ test('keyboard users can skip straight to the content', async ({ page }) => {
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
 });
+
+test('cheat sheet lists every topic and filters by category', async ({ page }) => {
+  await page.goto('./#/cheatsheet');
+  await expect(page.locator('.cs-card')).toHaveCount(TOPICS.length);
+  await page.getByRole('button', { name: 'Foundations' }).click();
+  await expect(page.locator('.cs-card')).toHaveCount(TOPICS.filter((t) => t.category === 'foundations').length);
+});
+
+test('SSRF map: an open redirect beats a host allowlist', async ({ page }) => {
+  await page.goto('./#/ssrf');
+  const viz = page.locator('.ssrf-viz');
+  await viz.getByRole('radio', { name: 'Host allowlist' }).click();
+  await viz.getByRole('button', { name: 'Bypass: open redirect' }).click();
+  await viz.getByRole('button', { name: 'Send' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+});
+
+test('JWT inspector: alg none is accepted by the naive server only', async ({ page }) => {
+  await page.goto('./#/jwt');
+  const viz = page.locator('.jwt-viz');
+  await viz.getByRole('button', { name: 'alg: none' }).click();
+  await viz.getByRole('button', { name: 'Send token' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('admin', { timeout: 8000 });
+  await viz.getByRole('radio', { name: 'Hardened server' }).click();
+  await viz.getByRole('button', { name: 'alg: none' }).click();
+  await viz.getByRole('button', { name: 'Send token' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('smuggling stream: CL.TE leaves bytes that poison the victim request', async ({ page }) => {
+  await page.goto('./#/smuggling');
+  const viz = page.locator('.smug-viz');
+  for (let i = 0; i < 4; i++) await viz.getByRole('button', { name: /Next/ }).click();
+  await expect(viz.locator('.narration')).toContainText('victim-8f3a');
+});
+
+test('every topic has a share page with its own title', async ({ request }) => {
+  const res = await request.get('./t/jwt/');
+  expect(res.ok()).toBe(true);
+  const html = await res.text();
+  expect(html).toContain('<meta property="og:title" content="JWT Attacks · Hack the Diagram">');
+  expect(html).toContain('#/jwt');
+});

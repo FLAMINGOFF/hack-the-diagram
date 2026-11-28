@@ -17,6 +17,9 @@ export function Nav({ route }) {
         <a href="#/start" className={`nav-start ${route === '/start' ? 'active' : ''}`} aria-current={route === '/start' ? 'page' : undefined}>
           {tr({ en: 'Start here', zh: '新手指引' })}
         </a>
+        <a href="#/cheatsheet" className={`nav-start ${route === '/cheatsheet' ? 'active' : ''}`} aria-current={route === '/cheatsheet' ? 'page' : undefined}>
+          {tr({ en: 'Cheat sheet', zh: '速查表' })}
+        </a>
         <TopicMenu route={route} />
         <div className="nav-tools">
           <div className="lang-toggle" role="group" aria-label="Language">
