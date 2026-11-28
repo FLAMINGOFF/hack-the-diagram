@@ -141,3 +141,68 @@ test('clickjacking layers: the click lands on the framed bank page', async ({ pa
   await viz.getByRole('button', { name: 'Play the click' }).click();
   await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 6000 });
 });
+
+test('path traversal: nested ../ beats a one-pass strip, resolving stops it', async ({ page }) => {
+  await page.goto('./#/path-traversal');
+  const viz = page.locator('.pt-viz');
+  await viz.getByRole('radio', { name: 'Strip "../" once' }).click();
+  await viz.getByRole('button', { name: '....//....//....//etc/passwd' }).click();
+  await viz.getByRole('button', { name: 'Read file' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('/etc/passwd', { timeout: 8000 });
+  await viz.getByRole('radio', { name: 'Resolve, then check the prefix' }).click();
+  await viz.getByRole('button', { name: '../../../etc/passwd', exact: true }).click();
+  await viz.getByRole('button', { name: 'Read file' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('command injection: argv removes the shell', async ({ page }) => {
+  await page.goto('./#/cmdi');
+  const viz = page.locator('.sh-viz');
+  await viz.getByRole('button', { name: 'Run it' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+  await expect(viz.locator('.sh-out').last()).toHaveText('www-data');
+  await viz.getByRole('radio', { name: /execFile/ }).click();
+  await viz.getByRole('button', { name: 'Run it' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('IDOR grid: scanning leaks invoices until the owner is checked', async ({ page }) => {
+  await page.goto('./#/access-control');
+  const viz = page.locator('.idor-viz');
+  await viz.getByRole('button', { name: /^Scan/ }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('10 other', { timeout: 8000 });
+  await viz.getByRole('radio', { name: 'Checks invoice.owner' }).click();
+  await viz.getByRole('button', { name: /^Scan/ }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});
+
+test('auth timing: the slow reply gives carlos away, lockout stops the guess', async ({ page }) => {
+  await page.goto('./#/auth');
+  const viz = page.locator('.auth-viz');
+  await viz.getByRole('radio', { name: 'Same message, different timing' }).click();
+  await viz.getByRole('button', { name: 'Try 8 usernames' }).click();
+  await expect(viz.locator('.verdict.bad').first()).toContainText('carlos', { timeout: 8000 });
+  await viz.getByText('Lock the account after 5 failures').click();
+  await viz.getByRole('button', { name: 'Guess passwords' }).click();
+  await expect(viz.locator('.verdict.good')).toContainText('Locked out', { timeout: 8000 });
+});
+
+test('race lanes: a single-packet attack applies the coupon every time', async ({ page }) => {
+  await page.goto('./#/race');
+  const viz = page.locator('.race-viz');
+  await viz.getByRole('radio', { name: 'Single-packet attack' }).click();
+  await viz.getByRole('button', { name: 'Send 10 requests' }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('Applied 10 times', { timeout: 8000 });
+});
+
+test('file upload: a polyglot gets past the signature check', async ({ page }) => {
+  await page.goto('./#/file-upload');
+  const viz = page.locator('.up-viz');
+  await viz.getByRole('button', { name: 'GIF89a + PHP (polyglot)' }).click();
+  await viz.getByText('First bytes must be an image signature').click();
+  await viz.getByRole('button', { name: 'Upload', exact: true }).click();
+  await expect(viz.locator('.verdict.bad')).toContainText('web shell', { timeout: 8000 });
+  await viz.getByText('Allowlist: .jpg .png .gif (any case)').click();
+  await viz.getByRole('button', { name: 'Upload', exact: true }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 8000 });
+});

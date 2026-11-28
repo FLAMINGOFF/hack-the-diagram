@@ -9,6 +9,36 @@ const L = (en, zh) => ({ en, zh });
 
 // Hand-built interactive visuals for some topics, each in its own chunk.
 const VISUALS = {
+  'path-traversal': {
+    title: L('Walk the folder tree', '沿着目录树往上走'),
+    intro: L('The server glues your filename onto its images folder. Watch each "../" climb one folder up, then switch on each check and see which bypass beats it.', '服务器把你给的文件名拼在图片文件夹后面。看每个 "../" 如何往上爬一层目录，再依次打开各种检查，看哪种绕过能打败它。'),
+    Component: lazy(() => import('../visuals/PathTree.jsx')),
+  },
+  cmdi: {
+    title: L('One string, several commands', '一个字符串，好几条命令'),
+    intro: L('The server wants to ping a host you type. See how the shell splits your input into separate commands, and why passing arguments without a shell ends the problem.', '服务器想 ping 你输入的主机。看 shell 如何把你的输入拆成几条独立的命令，以及为什么不经过 shell 直接传参数就能根治这个问题。'),
+    Component: lazy(() => import('../visuals/ShellParse.jsx')),
+  },
+  'access-control': {
+    title: L('Change the number in the URL', '改一下 URL 里的数字'),
+    intro: L('An insecure direct object reference in one picture: the server knows who Alice is but never asks whether the invoice belongs to her.', '一张图看懂不安全的直接对象引用：服务器知道 Alice 是谁，却从不问这张发票是不是她的。'),
+    Component: lazy(() => import('../visuals/IdorGrid.jsx')),
+  },
+  auth: {
+    title: L('Find the real username, then the password', '先找出真实用户名，再猜密码'),
+    intro: L('Every attempt below uses a wrong password. Small differences in the reply, even a few milliseconds, tell the attacker which accounts exist. Then see what a lockout changes.', '下面每次尝试用的都是错误密码。响应里的细微差别，哪怕只差几毫秒，都会告诉攻击者哪些账号存在。然后看看账号锁定能改变什么。'),
+    Component: lazy(() => import('../visuals/AuthTiming.jsx')),
+  },
+  race: {
+    title: L('Squeeze requests into the gap', '把请求塞进那道缝隙'),
+    intro: L('Redeeming a coupon is two steps: check that it is unused, then mark it used. Each lane is one request. Anything that checks inside the shaded window wins.', '兑换优惠券分两步：先检查它没被用过，再标记为已使用。每条轨道是一个请求，凡是在阴影窗口内完成检查的请求都能成功。'),
+    Component: lazy(() => import('../visuals/RaceLanes.jsx')),
+  },
+  'file-upload': {
+    title: L('Get a web shell past the checks', '让 Web Shell 混过检查'),
+    intro: L('Pick a file and the checks the server makes. Each check looks at one thing the attacker controls; see which combination finally keeps PHP from running.', '选一个文件和服务器要做的检查。每项检查都只看攻击者能控制的某一个方面；看看哪种组合最终能让 PHP 跑不起来。'),
+    Component: lazy(() => import('../visuals/UploadGates.jsx')),
+  },
   clickjacking: {
     title: L('Pull the page apart', '把页面拆开看'),
     intro: L('A clickjacking page is two pages stacked on top of each other. Separate the layers to see which one actually receives the click.', '点击劫持页面其实是两个叠在一起的页面。把图层拆开，看看真正接收点击的是哪一层。'),

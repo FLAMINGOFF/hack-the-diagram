@@ -57,6 +57,7 @@ Highlights:
 - **SQL injection**: a real SQLite engine (sql.js); every input character is coloured as data or code.
 - **CSRF / TLS**: configurable simulators (SameSite, tokens; passive eavesdropper vs active MITM).
 - **Clickjacking**: an opacity slider reveals the invisible frame under the decoy button.
+- **See it**: topics get a hand-built animation of the mechanism: walk `../` up a folder tree, watch the shell split one string into several commands, scan invoice ids, time login replies, race requests through a coupon check, push a web shell past upload filters, and more.
 - **Request smuggling**: step through the bytes and see exactly where the front end and back end disagree, and how the leftover bytes poison the next user's request.
 - **SSRF**: an animated network map shows the server carrying your URL past the firewall, with four defences and the bypass that beats each one.
 - **JWT**: edit a real token, signed with HMAC-SHA256 in your browser, and watch a naive and a hardened server verify it step by step (alg: none, weak secrets, kid traversal).
@@ -89,7 +90,7 @@ Every push and pull request runs the [CI workflow](.github/workflows/ci.yml). Th
 | Check | What it covers |
 | --- | --- |
 | **ESLint** | JS/JSX, React hooks rules and `jsx-a11y` accessibility rules |
-| **Unit tests** (Vitest, 575) | Every lab preset in both vulnerable and fixed mode, every challenge (the starting input must fail, the published solution must pass), every EN/中文 string pair, the shared helpers (inert HTML/JS checks, raw HTTP parser, local progress), and the visuals' logic (URL normalisation, a published HMAC-SHA256 test vector, smuggling byte offsets) |
+| **Unit tests** (Vitest, 596) | Every lab preset in both vulnerable and fixed mode, every challenge (the starting input must fail, the published solution must pass), every EN/中文 string pair, the shared helpers (inert HTML/JS checks, raw HTTP parser, local progress), and the visuals' logic (URL normalisation, a published HMAC-SHA256 test vector, smuggling byte offsets) |
 | **Browser tests** (Playwright) | All 32 topic pages render without errors or horizontal overflow, search, language switch, keyboard skip link, and solving a challenge updates the guide |
 | **Accessibility** (axe-core) | WCAG 2.1 A/AA scan of every page in light and dark mode |
 | **Lighthouse CI** | Performance, accessibility, best practices and SEO on the production build. The badges above show the lowest score from the latest run on `main` |
@@ -136,7 +137,7 @@ src/
       lib.js               helpers (inert HTML/JS execution checks, raw HTTP parser)
       core1.js … adv4b.js  variants, challenges and cases per topic
     cheatsheet.js          data for the one-page cheat sheet
-  visuals/                 hand-built interactive visuals (SSRF, JWT, smuggling, CORS, OAuth, clickjacking)
+  visuals/                 hand-built interactive visuals, one per topic, logic in plain .js
                            with their logic in plain .js files so it can be unit-tested
   Cheatsheet.jsx           printable cheat sheet page
 tests/

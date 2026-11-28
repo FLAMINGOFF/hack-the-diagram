@@ -663,3 +663,73 @@ main:focus { outline: none; }
 .cj3-cursor.fall { transform: translateZ(112px); }
 .cj3-legend { margin: 12px 0 0; padding-left: 18px; font-size: 0.86rem; color: var(--muted); display: grid; gap: 4px; }
 @media (max-width: 520px) { .cj3-stage { width: 220px; height: 200px; } .cj3-scene { height: 320px; } .cj3-layer { padding: 26px 10px 12px; } }
+/* batch 1 visuals */
+.pt-code { margin: 8px 0 12px; }
+.pt-notes { margin: 10px 0 0; padding-left: 18px; font: 0.8rem var(--mono); color: var(--muted); }
+.pt-trail { display: flex; flex-wrap: wrap; gap: 4px; min-height: 26px; margin-bottom: 10px; }
+.pt-seg { font: 600 0.78rem var(--mono); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border); color: var(--muted); background: var(--surface-2); }
+.pt-seg.on { color: var(--text); border-color: var(--blue); }
+.pt-seg.on.up { border-color: var(--red); color: var(--red); }
+.pt-root { font: 0.82rem/1.55 var(--mono); }
+.pt-tree { list-style: none; margin: 0; padding-left: 18px; border-left: 1px dashed var(--border); }
+.pt-node { display: inline-block; padding: 0 6px; border-radius: 5px; border: 1px solid transparent; transition: background 0.25s, border-color 0.25s; }
+.pt-node em { font-style: normal; color: var(--text); font-size: 0.72rem; }
+.pt-node.base { border-color: color-mix(in srgb, var(--green) 50%, transparent); }
+.pt-node.trail { background: color-mix(in srgb, var(--blue) 10%, transparent); }
+.pt-node.hot { background: color-mix(in srgb, var(--red) 16%, transparent); border-color: var(--red); font-weight: 700; }
+.sh-line { white-space: pre-wrap; word-break: break-all; }
+.sh-parts { display: grid; gap: 6px; margin-top: 10px; }
+.sh-op { font-size: 0.8rem; color: var(--muted); padding-left: 8px; }
+.sh-op code { font: 700 0.85rem var(--mono); color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); padding: 1px 6px; border-radius: 5px; }
+.sh-part { border: 1px solid var(--border); border-left: 4px solid var(--blue); border-radius: 8px; padding: 8px 10px; background: var(--surface-2); animation: pop-in 0.3s ease-out; }
+.sh-part.injected { border-left-color: var(--red); }
+.sh-part.skipped { border-style: dashed; color: var(--muted); }
+.sh-cmd { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.sh-cmd code { font: 0.82rem var(--mono); word-break: break-all; }
+.sh-badge { font: 700 0.66rem var(--mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.sh-part.injected .sh-badge { color: var(--red); }
+.sh-sub { font: 0.78rem var(--mono); color: var(--red); margin-top: 4px; }
+.sh-out { font: 0.78rem var(--mono); margin-top: 6px; padding: 4px 8px; border-radius: 6px; background: var(--code-bg); color: var(--code-text); word-break: break-all; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.idor-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.idor-cell { display: grid; gap: 2px; padding: 10px 6px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: 0.8rem var(--mono); cursor: pointer; transition: background 0.25s, border-color 0.25s; }
+.idor-cell.sel { outline: 2px solid var(--blue); outline-offset: 1px; }
+.idor-cell.own { border-color: var(--blue); }
+.idor-cell.leak { border-color: var(--red); background: color-mix(in srgb, var(--red) 12%, var(--surface)); }
+.idor-cell.denied { border-color: var(--green); background: color-mix(in srgb, var(--green) 10%, var(--surface)); }
+.idor-id { font-weight: 700; }
+.idor-who, .idor-amt { color: var(--muted); }
+.idor-cell.leak .idor-who { color: var(--red); font-weight: 700; }
+.auth-bars { display: grid; gap: 4px; margin-top: 12px; }
+.auth-row { display: grid; grid-template-columns: 56px minmax(0, 1fr) 54px; grid-template-areas: 'n b m' 'x x x'; column-gap: 8px; align-items: center; font: 0.78rem var(--mono); padding: 3px 6px; border-radius: 6px; animation: pop-in 0.25s ease-out; }
+.auth-name { grid-area: n; }
+.auth-bar { grid-area: b; height: 8px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+.auth-bar span { display: block; height: 100%; background: var(--c-normal); }
+.auth-ms { grid-area: m; text-align: right; color: var(--muted); }
+.auth-msg { grid-area: x; color: var(--muted); font-size: 0.72rem; }
+.auth-row.odd { background: color-mix(in srgb, var(--red) 10%, transparent); }
+.auth-row.odd .auth-bar span { background: var(--red); }
+.auth-row.odd .auth-name, .auth-row.odd .auth-msg { color: var(--red); font-weight: 700; }
+.auth-go { margin-top: 10px; }
+.race-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
+.race-controls .seg-group { margin-bottom: 0; }
+.race-svg { width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto; }
+.sh-viz .panel > .btn, .idor-viz .panel > .btn { margin-top: 12px; }
+.race-window { fill: color-mix(in srgb, var(--amber) 16%, transparent); stroke: var(--amber); stroke-dasharray: 4 3; }
+.race-wtext { font: 600 13px var(--mono); fill: var(--amber); }
+.race-label, .race-axis { font: 13px var(--mono); fill: var(--muted); }
+.race-lane :is(line, circle, rect) { opacity: 0.25; transition: opacity 0.3s; }
+.race-lane.on :is(line, circle, rect) { opacity: 1; }
+.race-lane line { stroke: var(--c-normal); stroke-width: 2; }
+.race-lane circle { fill: var(--surface); stroke: var(--blue); stroke-width: 2; }
+.race-lane rect { fill: var(--c-normal); }
+.race-lane.on.ok line, .race-lane.on.ok rect { stroke: var(--red); fill: var(--red); }
+.race-key { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+.race-key .race-ok { color: var(--red); }
+.up-gates { display: grid; gap: 6px; margin-bottom: 12px; }
+.up-steps { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.up-steps li { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); border-left: 4px solid var(--green); font-size: 0.84rem; animation: pop-in 0.3s ease-out; }
+.up-steps li.fail { border-left-color: var(--red); }
+.up-steps li span { color: var(--muted); font-size: 0.8rem; word-break: break-all; }
+.up-steps li b { word-break: break-all; }
+@media (prefers-reduced-motion: reduce) { .sh-part, .auth-row, .up-steps li { animation: none; } }
