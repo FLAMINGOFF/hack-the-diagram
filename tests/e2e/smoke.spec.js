@@ -308,3 +308,48 @@ test('GraphQL: suggestions leak the hidden field', async ({ page }) => {
   await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
   await expect(viz.locator('.gql-field.leak')).toContainText('password');
 });
+
+test('LLM injection: the review deletes the account until a confirmation is required', async ({ page }) => {
+  await page.goto('./#/llm');
+  const viz = page.locator('.llm-viz');
+  await viz.getByRole('button', { name: 'Carlos asks the assistant' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 10000 });
+  await viz.getByText('User must confirm destructive tool calls').click();
+  await viz.getByRole('button', { name: 'Carlos asks the assistant' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 10000 });
+});
+
+test('MCP: pinned descriptions catch a rug pull', async ({ page }) => {
+  await page.goto('./#/mcp');
+  const viz = page.locator('.mcp-viz');
+  await viz.getByRole('radio', { name: 'Rug pull after approval' }).click();
+  await viz.getByText('Pin descriptions, re-approve on change').click();
+  await viz.getByRole('button', { name: 'Install and use it' }).click();
+  await expect(viz.locator('.verdict.good')).toBeVisible({ timeout: 10000 });
+});
+
+test('cache poisoning: every later visitor gets the evil script', async ({ page }) => {
+  await page.goto('./#/cache-poisoning');
+  const viz = page.locator('.cp-viz');
+  await viz.getByRole('button', { name: 'Poison the cache' }).click();
+  await expect(viz.locator('.cp-victim.bad')).toHaveCount(4, { timeout: 8000 });
+});
+
+test('host header: X-Forwarded-Host slips past a Host allowlist', async ({ page }) => {
+  await page.goto('./#/host-header');
+  const viz = page.locator('.hh-viz');
+  await viz.getByRole('radio', { name: 'X-Forwarded-Host: evil.example' }).click();
+  await viz.getByText('Reject unknown Host values').click();
+  await viz.getByRole('button', { name: 'Request a reset for carlos' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+});
+
+test('prototype pollution: constructor.prototype bypasses a __proto__ filter', async ({ page }) => {
+  await page.goto('./#/prototype-pollution');
+  const viz = page.locator('.pp-viz');
+  await viz.getByRole('radio', { name: 'constructor.prototype' }).click();
+  await viz.getByRole('radio', { name: 'Skip "__proto__" only' }).click();
+  await viz.getByRole('button', { name: 'Merge' }).click();
+  await expect(viz.locator('.verdict.bad')).toBeVisible({ timeout: 8000 });
+  expect(await page.evaluate(() => ({}).isAdmin)).toBeUndefined();
+});

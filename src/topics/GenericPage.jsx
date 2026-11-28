@@ -9,6 +9,31 @@ const L = (en, zh) => ({ en, zh });
 
 // Hand-built interactive visuals for some topics, each in its own chunk.
 const VISUALS = {
+  llm: {
+    title: L('The attacker writes a review, the model obeys', '攻击者写一条评论，模型照办'),
+    intro: L('Indirect prompt injection: the attacker never talks to the assistant, only to data it will read. Switch defences on and see which ones live in code and which only in the prompt.', '间接提示注入：攻击者从不直接和助手对话，只是写下它会读到的数据。打开各项防御，看哪些是写在代码里的，哪些只是写在提示词里的。'),
+    Component: lazy(() => import('../visuals/LlmChat.jsx')),
+  },
+  mcp: {
+    title: L('A tool description is a prompt', '工具描述就是提示词'),
+    intro: L('An MCP server describes its tools in text the model reads. Compare what the user sees with what the model sees, then follow the agent.', 'MCP 服务器用文本描述自己的工具，而模型会读这些文本。对比用户看到的和模型看到的，然后跟着智能体走一遍。'),
+    Component: lazy(() => import('../visuals/McpTrace.jsx')),
+  },
+  'cache-poisoning': {
+    title: L('One request, served to everyone', '一个请求，发给所有人'),
+    intro: L('The cache compares requests by their key. An input outside the key that still changes the response lets one attacker request decide what every later visitor gets.', '缓存按键来比较请求。如果某个输入不在键里却能改变响应，攻击者的一个请求就能决定之后每位访客拿到什么。'),
+    Component: lazy(() => import('../visuals/CachePoison.jsx')),
+  },
+  'host-header': {
+    title: L('A real email with the wrong link', '一封真邮件，一个错链接'),
+    intro: L('Password reset poisoning: the shop builds the reset link from the request’s own headers. Change a header, then follow the email.', '密码重置投毒：商城根据请求自己的头部生成重置链接。改一个请求头，然后跟着这封邮件走。'),
+    Component: lazy(() => import('../visuals/HostReset.jsx')),
+  },
+  'prototype-pollution': {
+    title: L('Follow the merge into the prototype', '跟着合并一路写进原型'),
+    intro: L('A simulation (your browser’s real prototype is never touched): a recursive merge follows the keys in a JSON body, and two of those keys lead to the object every other object inherits from.', '这是模拟（不会改动你浏览器里真正的原型）：递归合并顺着 JSON 请求体里的键往下走，其中有两个键会通向所有对象都继承的那个对象。'),
+    Component: lazy(() => import('../visuals/ProtoPollute.jsx')),
+  },
   dom: {
     title: L('From the URL to the sink', '从 URL 到汇点'),
     intro: L('DOM XSS happens entirely in the browser. Follow a value from the address bar into the page, and see which sinks turn it into running code.', 'DOM XSS 完全发生在浏览器里。跟着一个值从地址栏走进页面，看哪些汇点会把它变成可执行的代码。'),
